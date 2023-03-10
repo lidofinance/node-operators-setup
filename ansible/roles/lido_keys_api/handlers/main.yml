@@ -1,0 +1,10 @@
+---
+- name: restart lido-council-daemon container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ lido_keys_api_compose_project }}/
+    state: present
+    project_name: "{{ lido_keys_api_compose_project }}"
+    services: lido-keys-api
+    restarted: true

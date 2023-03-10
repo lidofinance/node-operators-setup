@@ -1,0 +1,68 @@
+version: "3"
+
+networks:
+  nodes_network:
+    name: nodes_network
+    external: true
+
+services:
+  geth-node:
+    image: ethereum/client-go{{ geth_node_image_tag }}
+    container_name: geth-node
+    restart: unless-stopped
+    stop_grace_period: 3m
+    user: 1000:1000
+    deploy:
+      resources:
+        limits:
+          cpus: {{ geth_node_cpu_limit }}
+          memory: {{ geth_node_mem_limit }}
+    command: >
+      --{{ geth_node_eth_network }}
+      --syncmode {{ geth_node_syncmode }}
+      --http --http.api "engine,net,eth,web3,personal,debug,txpool"
+      --datadir=/srv
+      --http.port {{ geth_node_http_port }}
+      --http.addr "0.0.0.0"
+      --http.vhosts '*'
+      --http.corsdomain '*'
+      --ws --ws.api "engine,net,eth,web3,personal,debug,txpool"
+      --ws.addr "0.0.0.0"
+      --ws.port {{ geth_node_ws_port }}
+      --ws.origins '*'
+      --metrics --metrics.port={{ geth_node_metrics_port }}
+      --pprof --pprof.addr=0.0.0.0
+      --authrpc.jwtsecret="/jwtsecret/jwtsecret.hex"
+      --authrpc.addr="0.0.0.0"
+      --authrpc.port={{ geth_node_authrpc_port }}
+      --authrpc.vhosts="*"
+{% if(geth_node_total_terminal_difficulty is defined) and geth_node_total_terminal_difficulty %}
+      --override.terminaltotaldifficulty {{ geth_node_total_terminal_difficulty }}
+{% endif %}
+      --vmodule=rpc=5
+      --maxpeers=100
+    labels:
+      - "prometheus-job=geth-node"
+      - "prometheus-endpoint=/debug/metrics/prometheus"
+      - "prometheus-port={{ geth_node_metrics_port }}"
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/geth:/srv
+      - {{ containers_basedir }}/{{ ansible_role_name }}/jwtsecret:/jwtsecret
+    ports:
+      - {{ geth_node_http_port }}:{{ geth_node_http_port }}
+      - {{ geth_node_authrpc_port }}:{{ geth_node_authrpc_port }}
+{% if geth_node_logging_driver|d('not-loki') == "loki" %}
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ geth_node_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"
+{% endif %}

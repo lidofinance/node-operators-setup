@@ -1,0 +1,26 @@
+docker_pull: false
+alerts_box_logging_url: ""
+
+alerts_box_compose_project: alerts-box
+
+alerts_box_alertmanager_version: v0.25.0
+alerts_box_grafana_version: 8.5.15
+alerts_box_loki_version: 2.5.0
+alerts_box_prometheus_version: v2.37.6
+alerts_box_traefik_version: v2.6.3
+
+alerts_box_alertmanager_port: 9093
+alerts_box_grafana_port: 3000
+alerts_box_grafana_renderer_port: 8081
+alerts_box_loki_port_http: 3100
+alerts_box_loki_port_grpc: 9096
+alerts_box_prometheus_port: 9090
+alerts_box_traefik_metrics_port: 8082
+
+alerts_box_grafana_default_theme: dark
+
+alerts_box_alertmanager_mem_limit: 64m
+alerts_box_grafana_mem_limit: 192m
+alerts_box_loki_mem_limit: 5g
+alerts_box_prometheus_mem_limit: 8g
+alerts_box_traefik_mem_limit: 128m

@@ -1,0 +1,28 @@
+---
+# lighthouse
+lighthouse_node_compose_project: lighthouse-node
+
+# https://lighthouse-book.sigmaprime.io/docker.html#available-docker-images
+lighthouse_node_image_name: "sigp/lighthouse"
+lighthouse_node_image_tag: ":v3.1.0-modern"
+
+lighthouse_node_cpu_limit: 4
+lighthouse_node_mem_limit: 8G
+
+lighthouse_node_debug_level: info
+lighthouse_node_beacon_network: mainnet
+lighthouse_node_reconstruct_historic_states: true
+lighthouse_node_sync_url: "https://beaconstate.info/"
+lighthouse_node_host_header_allowlist: "http://127.0.0.1,http://localhost,http://lighthouse-node,http://{{ (hostvars[groups.validators_ejector[0]]).wireguard_address.split('/')[0] }}"
+
+# https://lighthouse-book.sigmaprime.io/advanced_database.html#freezer-db-space-time-trade-offs
+lighthouse_node_slots_per_restore_point: 2048 # 8192 default in lighthouse
+lighthouse_node_total_terminal_difficulty: ""
+
+lighthouse_node_api_port: 5051
+lighthouse_node_metrics_port: 8008
+
+# misc
+docker_pull: false
+lighthouse_node_logging_url: ""
+lighthouse_node_logging_driver: loki

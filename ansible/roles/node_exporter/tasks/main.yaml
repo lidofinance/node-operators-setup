@@ -1,0 +1,47 @@
+---
+- name: Install node exporter
+  become: true
+  apt:
+    name:
+      - prometheus-node-exporter-collectors
+      - prometheus-node-exporter
+    cache_valid_time: 3600
+    update_cache: true
+
+- name: Create directory for overrides
+  become: true
+  file:
+    name: /etc/systemd/system/prometheus-node-exporter.service.d
+    state: directory
+    mode: "0770"
+    owner: root
+    group: root
+
+- name: Configure defaults for node exporter
+  become: true
+  copy:
+    content: |
+      ARGS="--collector.systemd --collector.processes --collector.systemd.enable-restarts-metrics"
+    dest: /etc/default/prometheus-node-exporter
+    mode: "0644"
+    owner: root
+    group: root
+  notify: restart node-exporter
+
+- name: Configure access list for node exporter
+  become: true
+  copy:
+    # We allow all scrapers from all their IPs.
+    content: |
+      [Service]
+      IPAddressDeny=0.0.0.0/0 ::/0
+      IPAddressAllow=127.0.0.0/8 ::1/128
+      IPAddressAllow={{ ansible_host|d('127.0.0.1') }}
+      IPAddressAllow={{ wireguard_address.split('/')[0]|d('127.0.0.1') }}
+      IPAddressAllow={{ (hostvars[groups.monitoring_server[0]]).wireguard_address.split('/')[0] }}
+      IPAddressAllow=172.16.0.0/12
+    dest: /etc/systemd/system/prometheus-node-exporter.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0640"
+  notify: daemon-reload

@@ -1,0 +1,10 @@
+---
+- name: restart lighthouse container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ lighthouse_node_compose_project }}/
+    state: present
+    project_name: "{{ lighthouse_node_compose_project }}"
+    services: lighthouse-node
+    restarted: true

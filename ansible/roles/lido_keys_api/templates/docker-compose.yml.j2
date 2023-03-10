@@ -1,0 +1,87 @@
+version: "3"
+
+services:
+  lido-keys-api-db:
+    image: postgres{{ lido_keys_api_db_postgres_tag }}
+    container_name: {{ lido_keys_api_compose_project }}_db
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: {{ lido_keys_api_db_cpu_limit }}
+          memory: {{ lido_keys_api_db_mem_limit }}
+    environment:
+      POSTGRES_DB: {{ lido_keys_api_db_username }}
+      POSTGRES_USER: {{ lido_keys_api_db_username }}
+      POSTGRES_PASSWORD: {{ lido_keys_api_db_password }}
+    volumes:
+      - {{ containers_basedir }}/{{ lido_keys_api_compose_project }}/db/pgdata/:/var/lib/postgresql/data
+{% if lido_keys_api_logging_driver|d('not-loki') == "loki" %}
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ lido_keys_api_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"
+{% endif %}
+
+  lido-keys-api:
+    image: {{ lido_keys_api_image_name }}{{ lido_keys_api_image_tag }}
+    container_name: {{ lido_keys_api_compose_project }}_api
+    restart: unless-stopped
+    stop_grace_period: 1m
+    deploy:
+      resources:
+        limits:
+          cpus: {{ lido_keys_api_cpu_limit }}
+          memory: {{ lido_keys_api_mem_limit }}
+    labels:
+      - "prometheus-job=lido-keys-api"
+      - "prometheus-endpoint=/metrics"
+      - "prometheus-port={{ lido_keys_api_http_port }}"
+    ports:
+      - "{{ wireguard_address.split('/')[0] }}:{{ lido_keys_api_http_ext_port }}:3000"
+    environment:
+      NODE_ENV: "{{ lido_keys_api_node_env }}"
+      LOG_LEVEL: "{{ lido_keys_api_log_level }}"
+      LOG_FORMAT: "{{ lido_keys_api_log_format }}"
+      CORS_WHITELIST_REGEXP: "{{ lido_keys_api_cors_whitelist_regexp }}"
+      PORT: "{{ lido_keys_api_http_port }}"
+      SENTRY_DSN: "{{ lido_keys_api_sentry_dsn }}"
+      PROVIDERS_URLS: "{{ lido_keys_api_el_rpc_url_list | join(',') }}"
+      GLOBAL_CACHE_TTL: "{{ lido_keys_api_global_cache_ttl }}"
+      CHAIN_ID: "{{ lido_keys_api_chain_id }}"
+      JOB_INTERVAL_REGISTRY: "{{ lido_keys_api_job_interval_registry }}"
+      DB_PORT: "{{ lido_keys_api_db_port }}"
+      DB_HOST: lido-keys-api-db
+      DB_NAME: "{{ lido_keys_api_db_username }}"
+      DB_USER: "{{ lido_keys_api_db_username }}"
+      DB_PASSWORD: "{{ lido_keys_api_db_password }}"
+      CL_API_URLS: "{{ lido_keys_api_cl_api_url_list | join(',') }}"
+      PROVIDER_JSON_RPC_MAX_BATCH_SIZE: "{{ lido_keys_api_provider_json_rpc_max_batch_size }}"
+      PROVIDER_CONCURRENT_REQUESTS: "{{ lido_keys_api_provider_concurrent_requests }}"
+      PROVIDER_BATCH_AGGREGATION_WAIT_MS: "{{ lido_keys_api_provider_batch_aggregation_wait_ms }}"
+      VALIDATOR_REGISTRY_ENABLE: "{{ lido_keys_api_validator_registry_enable }}"
+      FETCHING_UNUSED_KEYS_ENABLE: "{{ lido_keys_api_fetching_unused_keys_enable }}"
+{% if lido_keys_api_logging_driver|d('not-loki') == "loki" %}
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ lido_keys_api_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"
+{% endif %}

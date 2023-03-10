@@ -1,0 +1,24 @@
+---
+version: '3'
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.40.0
+    restart: always
+    environment:
+      - CADVISOR_HEALTHCHECK_URL=http://{{ wireguard_address.split('/')[0] }}:{{ cadvisor_port }}/healthz
+    command:
+      - '-enable_load_reader=true'
+      - '-port={{ cadvisor_port }}'
+      - '-docker_only=true'
+      - '-logtostderr=true'
+      - '-disable_metrics=advtcp,cpu_topology,cpuset,hugetlb,memory_numa,referenced_memory,resctrl,sched,tcp,udp'
+    labels:
+      - "prometheus-job=cadvisor"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /dev/disk/:/dev/disk:ro
+      - /var/lib/docker/:/var/lib/docker
+    ports:
+      - {{ wireguard_address.split('/')[0] }}:{{ cadvisor_port }}:{{ cadvisor_port }}

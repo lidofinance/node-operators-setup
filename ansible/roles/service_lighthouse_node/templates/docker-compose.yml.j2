@@ -1,0 +1,75 @@
+---
+version: "3.9"
+
+networks:
+  nodes_network:
+    name: nodes_network
+    external: true
+
+services:
+
+  lighthouse-node:
+    image: sigp/lighthouse{{ lighthouse_node_image_tag }}
+    container_name: lighthouse-node
+    restart: unless-stopped
+    user: 1000:1000
+    deploy:
+      resources:
+        limits:
+          cpus: {{ lighthouse_node_cpu_limit }}
+          memory: {{ lighthouse_node_mem_limit }}
+    command: >
+      lighthouse
+      --debug-level={{ lighthouse_node_debug_level }}
+      --log-format=JSON
+      --network={{ lighthouse_node_beacon_network }}
+      --datadir=/opt/lighthouse/data
+      beacon
+      --http
+      --http-address=0.0.0.0
+      --http-port={{ lighthouse_node_api_port }}
+      --http-allow-origin={{ lighthouse_node_host_header_allowlist }}
+      --disable-upnp
+      --private
+      --slots-per-restore-point={{ lighthouse_node_slots_per_restore_point }}
+      --checkpoint-sync-url={{ lighthouse_node_sync_url }}
+{% if lighthouse_node_reconstruct_historic_states|d(False) %}
+      --reconstruct-historic-states
+{% endif %}
+{% if lighthouse_node_total_terminal_difficulty|d(False) %}
+      --terminal-total-difficulty-override={{ lighthouse_node_total_terminal_difficulty }}
+{% endif %}
+{# https://lighthouse-book.sigmaprime.io/merge-migration.html#connecting-to-an-execution-engine #}
+      --execution-endpoint="http://geth-node:8551"
+      --execution-jwt="/jwtsecret/jwtsecret.hex"
+      --metrics
+      --metrics-address=0.0.0.0
+      --metrics-port={{ lighthouse_node_metrics_port }}
+      --metrics-allow-origin=*
+    labels:
+      - "prometheus-job=lighthouse-node"
+      - "prometheus-endpoint=/metrics"
+      - "prometheus-port={{ lighthouse_node_metrics_port }}"
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/lighthouse:/opt/lighthouse/data
+      - {{ containers_basedir }}/{{ ansible_role_name }}/jwtsecret:/jwtsecret
+    networks:
+      - nodes_network
+    ports:
+      - "{{ lighthouse_node_api_port }}:{{ lighthouse_node_api_port }}"
+      - "{{ lighthouse_node_metrics_port }}:{{ lighthouse_node_metrics_port }}"
+{% if lighthouse_node_logging_driver|d('not-loki') == "loki" %}
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ lighthouse_node_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"
+{% endif %}

@@ -1,0 +1,47 @@
+---
+- name: ensure required variables are defined
+  assert:
+    that:
+      - lido_validator_ejector_operator_id is defined
+      - lido_validator_ejector_staking_module_id is defined
+      - lido_validator_ejector_locator_address is defined
+      - lido_validator_ejector_consensus_node is defined
+      - lido_validator_ejector_execution_node is defined
+
+- name: ensure needed directories are present
+  become: true
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: '{{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages', user: '1000', group: '1000', mode: '0770' }
+
+- name: ensure docker-compose directory is present
+  file:
+    path: "/etc/docker-compose/{{ lido_validator_ejector_compose_project }}"
+    state: directory
+    mode: "0750"
+
+- name: ensure docker-compose file generated
+  become: true
+  template:
+    src: docker-compose.yml.j2
+    dest: "/etc/docker-compose/{{ lido_validator_ejector_compose_project }}/docker-compose.yml"
+    mode: 0640
+
+- name: ensure run the containers
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: "/etc/docker-compose/{{ lido_validator_ejector_compose_project }}/"
+    pull: "{{ docker_pull }}"
+    build: false
+    state: present
+    project_name: "{{ lido_validator_ejector_compose_project }}"
+  register: lido_validator_ejector_docker_compose_result
+  until: lido_validator_ejector_docker_compose_result is success
+  retries: "{{ compose_retries }}"
+  delay: "{{ compose_retries_delay_sec }}"

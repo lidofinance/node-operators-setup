@@ -1,0 +1,13 @@
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ alerts_box_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"

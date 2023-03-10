@@ -1,0 +1,107 @@
+- name: Install WireGuard
+  apt:
+    name: wireguard
+    state: present
+
+- name: Enable WireGuard kernel module
+  modprobe:
+    name: wireguard
+    state: present
+  register: wireguard__register_module_enabled
+  until: wireguard__register_module_enabled is succeeded
+  retries: 10
+  delay: 10
+  failed_when: wireguard__register_module_enabled is failure
+
+- name: Register if config/private key already exists on target host
+  stat:
+    path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+  register: wireguard__register_config_file
+
+- name: WireGuard private key handling for new keys
+  when:
+    - not wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
+  block:
+    - name: Generate WireGuard private key
+      command: "wg genkey"
+      register: wireguard__register_private_key
+      changed_when: false
+
+    - name: Set private key fact
+      set_fact:
+        wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
+
+- name: WireGuard private key handling for existing keys
+  when:
+    - wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
+  block:
+    - name: Read WireGuard config file
+      slurp:
+        src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+      register: wireguard__register_config
+
+    - name: Set private key fact
+      set_fact:
+        wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+
+- name: Derive WireGuard public key
+  command: "wg pubkey"
+  args:
+    stdin: "{{ wireguard_private_key }}"
+  register: wireguard__register_public_key
+  changed_when: false
+  check_mode: false
+
+- name: Set public key fact
+  set_fact:
+    wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
+
+- name: Create WireGuard configuration directory
+  file:
+    dest: "{{ wireguard_remote_directory }}"
+    state: directory
+    mode: 0700
+
+- name: Generate WireGuard configuration file
+  template:
+    src: wg.conf.j2
+    dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    owner: "{{ wireguard_conf_owner }}"
+    group: "{{ wireguard_conf_group }}"
+    mode: "{{ wireguard_conf_mode }}"
+  notify:
+    - reconfigure wireguard
+
+- name: Ensure legacy reload-module-on-update is absent
+  file:
+    dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+    state: absent
+
+- name: Start and enable WireGuard service
+  service:
+    name: "wg-quick@{{ wireguard_interface }}"
+    state: "{{ wireguard_service_state }}"
+    enabled: "{{ wireguard_service_enabled }}"
+
+# Docker should be started after WireGuard
+- name: Create directory for Docker unit overrides
+  become: true
+  file:
+    name: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: "0750"
+    owner: root
+    group: root
+
+- name: Configure access list for node exporter
+  become: true
+  copy:
+    # Docker should start after WireGuard since we're publishing
+    # services in WireGuard subnet
+    content: |
+      [Unit]
+      After=wg-quick@wg0.service
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    owner: root

@@ -1,0 +1,133 @@
+---
+version: "3.9"
+
+services:
+
+  alertmanager:
+    image: prom/alertmanager:{{ alerts_box_alertmanager_version }}
+    container_name: {{ alerts_box_compose_project }}-alertmanager
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: {{ alerts_box_alertmanager_mem_limit }}
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/alertmanager:/etc/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/etc/alertmanager/data/"
+      - "--log.format=json"
+    expose:
+      - {{ alerts_box_alertmanager_port }}
+{% include './templates/logging.yml.j2' %}
+
+
+  grafana:
+    image: grafana/grafana:{{ alerts_box_grafana_version }}
+    container_name: {{ alerts_box_compose_project }}-grafana
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: {{ alerts_box_grafana_mem_limit }}
+    environment:
+      - GF_LOG_MODE=console
+      - GF_SECURITY_ADMIN_USER={{ alerts_box_grafana_user }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ alerts_box_grafana_password }}
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_USERS_DEFAULT_THEME={{ alerts_box_grafana_default_theme }}
+{% if alerts_box_grafana_default_dashboard|d(False) %}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH={{ alerts_box_grafana_default_dashboard }}
+{% endif %}
+      - GF_LOG_CONSOLE_FORMAT=json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`{{ ansible_host }}`)"
+      - "traefik.http.routers.grafana.service=grafana-{{ alerts_box_compose_project }}@docker"
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/grafana/data:/var/lib/grafana
+      - {{ containers_basedir }}/{{ ansible_role_name }}/grafana/provisioning:/etc/grafana/provisioning
+    expose:
+      - {{ alerts_box_grafana_port }}
+{% include './templates/logging.yml.j2' %}
+
+
+  loki:
+    image: grafana/loki:{{ alerts_box_loki_version }}
+    container_name: {{ alerts_box_compose_project }}-loki
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: {{ alerts_box_loki_mem_limit }}
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/loki:/mnt/loki
+    command:
+      - "--config.file=/mnt/loki/loki.yml"
+      - "--log.format=json"
+    ports:
+      - {{ (hostvars[groups.monitoring_server[0]]).wireguard_address.split('/')[0] }}:{{ alerts_box_loki_port_http }}:{{ alerts_box_loki_port_http }}
+
+  prometheus:
+    image: prom/prometheus:{{ alerts_box_prometheus_version }}
+    container_name: {{ alerts_box_compose_project }}-prometheus
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: {{ alerts_box_prometheus_mem_limit }}
+    volumes:
+      - {{ containers_basedir }}/{{ ansible_role_name }}/prometheus:/etc/prometheus
+      - {{ containers_basedir }}/{{ ansible_role_name }}/prometheus/data:/prometheus
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--log.format=json"
+    ports:
+      - 127.0.0.1:{{ alerts_box_prometheus_port }}:{{ alerts_box_prometheus_port }}
+{% include './templates/logging.yml.j2' %}
+
+
+  traefik:
+    image: traefik:{{ alerts_box_traefik_version }}
+    container_name: {{ alerts_box_compose_project }}-traefik
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: {{ alerts_box_traefik_mem_limit }}
+    command:
+      - "--log.level=INFO"
+      - "--log.format=json"
+      - "--accesslog.format=json"
+      - "--accesslog.fields.defaultmode=keep"
+      - "--accesslog.fields.names.ClientUsername=redact"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.Authorization=redact"
+      - "--accesslog.fields.headers.names.Cookie=redact"
+      - "--accesslog.fields.headers.names.Content-Type=keep"
+      - "--entrypoints.web.address=:80"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch"
+      - "--providers.docker.exposedbydefault=false"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.entryPoint=metrics"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      - "--entryPoints.metrics.address=:{{ alerts_box_traefik_metrics_port }}"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - {{ alerts_box_traefik_metrics_port }}
+    ports:
+      - 80:80
+{% include './templates/logging.yml.j2' %}
+
+
+# vim: set ts=2 sw=2:

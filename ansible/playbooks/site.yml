@@ -1,0 +1,90 @@
+---
+- name: Install basic packages
+  hosts: all
+  gather_facts: false
+  tags: [common]
+  tasks:
+    - name: Update cache
+      become: true
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+    - name: Install basic packages
+      become: true
+      apt:
+        name:
+          - python3-pip
+        state: present
+        cache_valid_time: 3600
+      register: apt_status
+      until: apt_status is success
+      retries: 12 # Overcome race condition for 1st apt task and unattended updates.
+      delay: 12
+
+- name: Install and configure WireGuard
+  become: true
+  hosts: all
+  roles:
+    - role: wireguard
+      tags: [common, wireguard]
+
+- name: Install and configure Docker
+  hosts: all
+  gather_facts: true
+  roles:
+    - role: docker_install
+      tags: [common, docker]
+
+- name: Install Node Exporter
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: node_exporter
+      tags: [common, node-exporter]
+
+- name: Install Cadvisor
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: cadvisor
+      tags: [common, cadvisor]
+
+- name: Install and configure Validators Ejector
+  hosts: validators_ejector
+  become: true
+  gather_facts: false
+  roles:
+    - role: lido_validator_ejector
+      tags: [services, validators-ejector]
+
+- name: Install and configure Keys-api
+  hosts: validators_ejector
+  become: true
+  gather_facts: false
+  roles:
+    - role: lido_keys_api
+      tags: [services, keys-api]
+
+- name: Install and configure Monitoring node
+  hosts: monitoring_server
+  gather_facts: false
+  roles:
+    - role: alerts_box
+      tags: [alerts-box]
+
+- name: Install and configure Geth node
+  hosts: ethereum_nodes
+  become: true
+  gather_facts: false
+  roles:
+    - role: service_geth_node
+      tags: [nodes, geth-node]
+
+- name: Install and configure Lighthouse node
+  hosts: ethereum_nodes
+  become: true
+  gather_facts: false
+  roles:
+    - role: service_lighthouse_node
+      tags: [nodes, lighthouse-node]

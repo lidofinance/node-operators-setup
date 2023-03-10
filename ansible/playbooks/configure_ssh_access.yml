@@ -1,0 +1,9 @@
+---
+- name: Install SSH key
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Add authorized key on remote hosts
+      authorized_key:
+        user: "{{ my_username|trim }}"
+        key: "{{ my_public_key|trim }}"

@@ -1,0 +1,15 @@
+---
+docker_log_driver: journald
+
+# Will be needed when we'll send logs to loki
+
+docker_loki_plugin_required: true
+docker_loki_batch_size: "102400"
+docker_loki_batch_wait: "1s"
+docker_loki_timeout: "10s"
+docker_loki_backoff_min: "100ms"
+docker_loki_backoff_max: "10s"
+docker_loki_retries: "10"
+docker_loki_buffer_size_max: "5m"
+docker_loki_mode: "non-blocking"
+docker_loki_external_labels: "{% raw %}container_name={{.Name}}{% endraw %}"

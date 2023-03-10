@@ -1,0 +1,54 @@
+---
+- name: ensure custom docker network is created
+  community.docker.docker_network:
+    name: nodes_network
+
+- name: make sure lighthouse-node directories are present
+  become: true
+  file:
+    path: "{{ containers_basedir }}/{{ ansible_role_name }}/{{ item.path }}"
+    state: directory
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: "lighthouse", user: "1000", group: "1000", mode: "0755" }
+    - { path: "jwtsecret", user: "1000", group: "1000", mode: "0755" }
+
+- name: generate jwtsecret file
+  become: true
+  template:
+    src: "jwtsecret.hex.j2"
+    dest: "{{ containers_basedir }}/{{ ansible_role_name }}/jwtsecret/jwtsecret.hex"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart lighthouse container
+
+- name: make sure docker compose directory exists
+  become: true
+  file:
+    path: "/etc/docker-compose/{{ lighthouse_node_compose_project }}"
+    state: directory
+    mode: 0750
+
+- name: generate docker compose file
+  become: true
+  template:
+    src: docker-compose.yml.j2
+    dest: "/etc/docker-compose/{{ lighthouse_node_compose_project }}/docker-compose.yml"
+    mode: 0640
+
+- name: run the containers
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: "/etc/docker-compose/{{ lighthouse_node_compose_project }}/"
+    pull: "{{ docker_pull }}"
+    build: false
+    state: present
+    project_name: "{{ lighthouse_node_compose_project }}"
+  register: lighthouse_node_docker_compose_result
+  until: lighthouse_node_docker_compose_result is success
+  retries: "{{ compose_retries }}"
+  delay: "{{ compose_retries_delay_sec }}"

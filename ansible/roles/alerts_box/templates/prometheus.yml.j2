@@ -1,0 +1,115 @@
+---
+global:
+  scrape_interval: 10s
+  external_labels:
+    monitor: alerts_box
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    timeout: 10s
+    static_configs:
+    - targets: ["alertmanager:{{ alerts_box_alertmanager_port }}"]
+
+rule_files:
+  - prometheus_rules/*.rule.yml
+
+scrape_configs:
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:{{ alerts_box_prometheus_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: prometheus
+
+
+  - job_name: node-exporter
+    static_configs:
+      - targets: ["{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:9100"]
+        labels:
+          source: {{ (hostvars[groups.ethereum_nodes[0]]).inventory_hostname }}
+          service: node-exporter
+      - targets: ["{{ (hostvars[groups.validators_ejector[0]]).wireguard_address.split('/')[0] }}:9100"]
+        labels:
+          source: {{ (hostvars[groups.validators_ejector[0]]).inventory_hostname }}
+          service: node-exporter
+      - targets: ["{{ (hostvars[groups.monitoring_server[0]]).wireguard_address.split('/')[0] }}:9100"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: node-exporter
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: ["{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:18080"]
+        labels:
+          source: {{ (hostvars[groups.ethereum_nodes[0]]).inventory_hostname }}
+          service: cadvisor
+      - targets: ["{{ (hostvars[groups.validators_ejector[0]]).wireguard_address.split('/')[0] }}:18080"]
+        labels:
+          source: {{ (hostvars[groups.validators_ejector[0]]).inventory_hostname }}
+          service: cadvisor
+      - targets: ["{{ (hostvars[groups.monitoring_server[0]]).wireguard_address.split('/')[0] }}:18080"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: cadvisor
+
+  - job_name: alertmanager
+    static_configs:
+      - targets: ["alertmanager:{{ alerts_box_alertmanager_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: alertmanager
+
+  - job_name: grafana
+    static_configs:
+      - targets: ["grafana:{{ alerts_box_grafana_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: grafana
+
+  - job_name: loki
+    static_configs:
+      - targets: ["loki:{{ alerts_box_loki_port_http }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: loki
+
+  - job_name: traefik
+    static_configs:
+      - targets: ["traefik:{{ alerts_box_traefik_metrics_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: traefik
+
+  - job_name: geth
+    metrics_path: "/debug/metrics/prometheus"
+    static_configs:
+      - targets: ["{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:{{ (hostvars[groups.ethereum_nodes[0]]).geth_node_metrics_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: geth
+
+  - job_name: lighthouse
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0]}}:{{ (hostvars[groups.ethereum_nodes[0]]).lighthouse_node_metrics_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: lighthouse
+
+  - job_name: keys-api
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["{{ (hostvars[groups.validators_ejector[0]]).wireguard_address.split('/')[0] }}:{{ (hostvars[groups.validators_ejector[0]]).lido_keys_api_http_ext_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: keys-api
+
+  - job_name: validators-ejector
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["{{ (hostvars[groups.validators_ejector[0]]).wireguard_address.split('/')[0] }}:{{ (hostvars[groups.validators_ejector[0]]).lido_validator_ejector_prometheus_port }}"]
+        labels:
+          source: {{ inventory_hostname }}
+          service: validators-ejector

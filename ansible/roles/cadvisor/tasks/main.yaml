@@ -1,0 +1,27 @@
+---
+- name: make sure Docker compose directory is present
+  become: true
+  file:
+    path: /etc/docker-compose/cadvisor
+    state: directory
+    mode: 0750
+
+- name: copy Docker compose file
+  become: true
+  template:
+    src: docker-compose.yml.j2
+    dest: /etc/docker-compose/cadvisor/docker-compose.yml
+    mode: 0640
+
+- name: run the containers
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/cadvisor/
+    pull: true
+    build: false
+    state: present
+  register: cadvisor_compose_result
+  until: cadvisor_compose_result is success
+  retries: '{{ compose_retries }}'
+  delay: '{{ compose_retries_delay_sec }}'

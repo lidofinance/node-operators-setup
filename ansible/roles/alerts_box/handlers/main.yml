@@ -1,0 +1,60 @@
+---
+- name: wait
+  pause:
+    seconds: 5
+  when: not ansible_check_mode
+
+- name: restart alertmanager container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ alerts_box_compose_project }}/
+    state: present
+    project_name: "{{ alerts_box_compose_project }}"
+    services: alertmanager
+    restarted: true
+  notify: wait
+
+- name: restart grafana container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ alerts_box_compose_project }}/
+    state: present
+    project_name: "{{ alerts_box_compose_project }}"
+    services: grafana
+    restarted: true
+  notify: wait
+
+- name: restart loki container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ alerts_box_compose_project }}/
+    state: present
+    project_name: "{{ alerts_box_compose_project }}"
+    services: loki
+    restarted: true
+  notify: wait
+
+- name: restart prometheus container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ alerts_box_compose_project }}/
+    state: present
+    project_name: "{{ alerts_box_compose_project }}"
+    services: prometheus
+    restarted: true
+  notify: wait
+
+- name: restart traefik container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ alerts_box_compose_project }}/
+    state: present
+    project_name: "{{ alerts_box_compose_project }}"
+    services: traefik
+    restarted: true
+  notify: wait

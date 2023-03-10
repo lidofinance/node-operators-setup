@@ -1,0 +1,24 @@
+---
+# common
+compose_retries: 3
+compose_retries_delay_sec: 5
+
+# misc
+docker_pull: false
+
+# docker-compose
+lido_validator_ejector_compose_project: lido-validator-ejector
+
+# application
+
+lido_validator_ejector_image_name: "lidofinance/validator-ejector"
+lido_validator_ejector_image_tag: ":dev"
+
+lido_validator_ejector_cpu_limit: 1
+lido_validator_ejector_mem_limit: 2G
+
+lido_validator_ejector_prometheus_port: 8989
+
+# misc
+validator_ejector_logging_driver: loki
+validator_ejector_logging_url: ""

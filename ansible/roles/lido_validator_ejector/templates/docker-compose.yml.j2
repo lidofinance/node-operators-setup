@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  validator-ejector:
+    image: {{ lido_validator_ejector_image_name }}{{ lido_validator_ejector_image_tag }}
+    container_name: {{ lido_validator_ejector_compose_project }}_validator_ejector
+    restart: unless-stopped
+    stop_grace_period: 1m
+    deploy:
+      resources:
+        limits:
+          cpus: {{ lido_validator_ejector_cpu_limit }}
+          memory: {{ lido_validator_ejector_mem_limit }}
+    labels:
+      - "prometheus-job=lido-validator-ejector"
+      - "prometheus-endpoint=/metrics"
+      - "prometheus-port={{ lido_validator_ejector_prometheus_port }}"
+    ports:
+      - "{{ wireguard_address.split('/')[0] }}:8989:8989"
+    environment:
+      - "EXECUTION_NODE={{ lido_validator_ejector_execution_node | join(',') }}"
+      - "CONSENSUS_NODE={{ lido_validator_ejector_consensus_node | join(',') }}"
+      - "LOCATOR_ADDRESS={{ lido_validator_ejector_locator_address }}"
+      - "STAKING_MODULE_ID={{ lido_validator_ejector_staking_module_id }}"
+      - "OPERATOR_ID={{ lido_validator_ejector_operator_id }}"
+      - "MESSAGES_LOCATION=messages"
+      - "MESSAGES_PASSWORD=pass"
+      - "BLOCKS_PRELOAD=7200"
+      - "BLOCKS_LOOP=32"
+      - "JOB_INTERVAL=384000"
+      - "HTTP_PORT={{ lido_validator_ejector_prometheus_port }}"
+      - "RUN_METRICS=true"
+      - "RUN_HEALTH_CHECK=true"
+      - "LOGGER_LEVEL=info"
+      - "LOGGER_FORMAT=json"
+      - "LOGGER_SECRETS=[\"test\"]"
+      - "DRY_RUN=false"
+    volumes:
+      - {{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages:/messages"
+    ports:
+      - {{ wireguard_address.split('/')[0] }}:{{ lido_validator_ejector_prometheus_port }}:{{ lido_validator_ejector_prometheus_port }}
+{% if validator_ejector_logging_driver|d('not-loki') == "loki" %}
+    logging:
+      driver: "loki"
+      options:
+        loki-url: "{{ validator_ejector_logging_url or docker_log_loki_url }}"
+        loki-batch-size: "{{ docker_loki_batch_size }}"
+        loki-batch-wait: "{{ docker_loki_batch_wait }}"
+        loki-external-labels: "{{ docker_loki_external_labels }}"
+        loki-timeout: "{{ docker_loki_timeout }}"
+        loki-min-backoff: "{{ docker_loki_backoff_min }}"
+        loki-max-backoff: "{{ docker_loki_backoff_max }}"
+        loki-retries: "{{ docker_loki_retries }}"
+        max-buffer-size: "{{ docker_loki_buffer_size_max }}"
+        mode: "{{ docker_loki_mode }}"
+{% endif %}

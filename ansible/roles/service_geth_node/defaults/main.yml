@@ -1,0 +1,23 @@
+---
+# geth
+geth_node_compose_project: geth-node
+
+geth_node_image_tag: ":v1.10.23"
+geth_node_cpu_limit: 3
+geth_node_mem_limit: 7G
+
+geth_node_eth_network: "mainnet"
+geth_node_exit_when_synced: false
+geth_node_syncmode: snap
+
+geth_node_http_port: 8545
+geth_node_ws_port: 8546
+geth_node_metrics_port: 6060
+geth_node_authrpc_port: 8551
+
+geth_node_total_terminal_difficulty: ""
+
+# misc
+docker_pull: false
+geth_node_logging_url: ""
+geth_node_logging_driver: loki

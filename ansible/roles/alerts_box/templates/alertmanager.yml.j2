@@ -1,0 +1,15 @@
+---
+route:
+  receiver: 'default'
+  group_by: ["alertname"]
+  group_wait: 30s
+  group_interval: 1h
+  repeat_interval: 2h
+  
+receivers:
+  - name: 'default'
+    telegram_configs:
+    - bot_token: {{ telegram_bot_token }}
+      api_url: https://api.telegram.org
+      chat_id: {{ telegram_chat_id }}
+      parse_mode: ''

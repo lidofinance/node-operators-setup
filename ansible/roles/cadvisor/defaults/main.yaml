@@ -1,0 +1,4 @@
+---
+cadvisor_port: 18080
+cadvisor_logging_driver: "loki"
+cadvisor_logging_url: ""

@@ -1,0 +1,10 @@
+---
+- name: restart validator-ejector container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ lido_validator_ejector_compose_project }}/
+    state: present
+    project_name: "{{ lido_validator_ejector_compose_project }}"
+    services: validator-ejector
+    restarted: true

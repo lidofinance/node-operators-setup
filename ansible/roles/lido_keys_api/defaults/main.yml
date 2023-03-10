@@ -1,0 +1,42 @@
+---
+# docker-compose
+lido_keys_api_compose_project: lido-keys-api
+
+# application
+lido_keys_api_image_name: "lidofinance/lido-keys-api"
+lido_keys_api_image_tag: ":dev"
+
+lido_keys_api_cpu_limit: 2
+lido_keys_api_mem_limit: 3G
+
+lido_keys_api_http_port: 3000
+lido_keys_api_http_ext_port: 3000
+
+lido_keys_api_node_env: production
+lido_keys_api_log_level: info
+lido_keys_api_log_format: json # json | simple
+lido_keys_api_cors_whitelist_regexp: "^(.+)$$"
+lido_keys_api_global_cache_ttl: 1
+lido_keys_api_job_interval_registry: "*/5 * * * * *" # every 5 seconds
+lido_keys_api_provider_json_rpc_max_batch_size: 100
+lido_keys_api_provider_concurrent_requests: 5
+lido_keys_api_provider_batch_aggregation_wait_ms: 10
+lido_keys_api_validator_registry_enable: true
+lido_keys_api_fetching_unused_keys_enable: true
+lido_keys_api_chain_id: 1
+
+# sentry
+lido_keys_api_sentry_dsn: ""
+
+# db
+lido_keys_api_db_port: 5432
+lido_keys_api_db_username: lido_keys_api
+
+lido_keys_api_db_cpu_limit: 1
+lido_keys_api_db_mem_limit: 4G
+lido_keys_api_db_postgres_tag: ":14-alpine"
+
+# misc
+docker_pull: false
+lido_keys_api_logging_driver: loki
+lido_keys_api_logging_url: ""

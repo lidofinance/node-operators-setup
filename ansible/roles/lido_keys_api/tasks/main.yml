@@ -1,0 +1,46 @@
+---
+- name: ensure required variables are defined
+  assert:
+    that:
+      - lido_keys_api_db_password is defined
+      - lido_keys_api_chain_id is defined
+      - lido_keys_api_el_rpc_url_list is defined
+      - lido_keys_api_cl_api_url_list is defined
+
+- name: ensure needed directories are present
+  become: true
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: '{{ containers_basedir }}/{{ lido_keys_api_compose_project }}/db/pgdata/', user: '70', group: '70', mode: '0700' }
+
+- name: ensure docker-compose directory is present
+  file:
+    path: "/etc/docker-compose/{{ lido_keys_api_compose_project }}"
+    state: directory
+    mode: "0750"
+
+- name: ensure docker-compose file generated
+  become: true
+  template:
+    src: docker-compose.yml.j2
+    dest: "/etc/docker-compose/{{ lido_keys_api_compose_project }}/docker-compose.yml"
+    mode: 0640
+
+- name: run the containers
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: "/etc/docker-compose/{{ lido_keys_api_compose_project }}/"
+    pull: "{{ docker_pull }}"
+    build: false
+    state: present
+    project_name: "{{ lido_keys_api_compose_project }}"
+  register: lido_keys_api_docker_compose_result
+  until: lido_keys_api_docker_compose_result is success
+  retries: "{{ compose_retries }}"
+  delay: "{{ compose_retries_delay_sec }}"

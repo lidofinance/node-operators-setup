@@ -1,0 +1,10 @@
+---
+- name: restart geth container
+  become: true
+  community.docker.docker_compose:
+    timeout: 300
+    project_src: /etc/docker-compose/{{ geth_node_compose_project }}/
+    state: present
+    project_name: "{{ geth_node_compose_project }}"
+    services: geth
+    restarted: true
