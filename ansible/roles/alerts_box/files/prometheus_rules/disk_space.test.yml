@@ -1,0 +1,35 @@
+---
+evaluation_interval: 1m
+rule_files:
+  - disk_space.rule.yml
+tests:
+  - alert_rule_test:
+      - alertname: disk usage
+        eval_time: 10m
+        exp_alerts:
+          - exp_annotations:
+              info: disk usage, usage ~71% on /warn
+            exp_labels:
+              instance: 127.0.0.1:9100
+              mountpoint: /warn
+              severity: warning
+          - exp_annotations:
+              info: disk usage, usage ~90% on /crit
+            exp_labels:
+              instance: 127.0.0.1:9100
+              mountpoint: /crit
+              severity: critical
+    input_series:
+      - series: node_filesystem_avail_bytes{mountpoint="/good",instance="127.0.0.1:9100"}
+        values: 500+0x50
+      - series: node_filesystem_size_bytes{mountpoint="/good",instance="127.0.0.1:9100"}
+        values: 1000+0x50
+      - series: node_filesystem_avail_bytes{mountpoint="/warn",instance="127.0.0.1:9100"}
+        values: 290+0x50
+      - series: node_filesystem_size_bytes{mountpoint="/warn",instance="127.0.0.1:9100"}
+        values: 1000+0x50
+      - series: node_filesystem_avail_bytes{mountpoint="/crit",instance="127.0.0.1:9100"}
+        values: 100+0x50
+      - series: node_filesystem_size_bytes{mountpoint="/crit",instance="127.0.0.1:9100"}
+        values: 1000+0x50
+    interval: 1m

@@ -1,0 +1,18 @@
+---
+evaluation_interval: 1m
+rule_files:
+  - cpu.rule.yml
+tests:
+  - alert_rule_test:
+      - alertname: CPU utilization
+        eval_time: 10m
+        exp_alerts:
+          - exp_annotations:
+              info: CPU utilization is too high
+            exp_labels:
+              instance: 127.0.0.1:9100
+              severity: warning
+    input_series:
+      - series: node_cpu_seconds_total{mode="idle",instance="127.0.0.1:9100"}
+        values: 100500+10x50
+    interval: 1m
