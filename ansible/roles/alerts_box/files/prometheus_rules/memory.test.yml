@@ -1,0 +1,21 @@
+---
+evaluation_interval: 1m
+rule_files:
+  - memory.rule.yml
+tests:
+  - alert_rule_test:
+      - alertname: Host Out Of Memory
+        eval_time: 7m
+        exp_alerts:
+          - exp_annotations:
+              summary: Host out of memory (instance 127.0.0.1:9100)
+              description: "Node memory is filling up (< 10% left)\n  VALUE = 0.9999999776482582%"
+            exp_labels:
+              instance: 127.0.0.1:9100
+              severity: warning
+    input_series:
+      - series: node_memory_MemAvailable_bytes{instance="127.0.0.1:9100"}
+        values: 5368709+0x50
+      - series: node_memory_MemTotal_bytes{instance="127.0.0.1:9100"}
+        values: 536870912+0x50
+    interval: 1m
