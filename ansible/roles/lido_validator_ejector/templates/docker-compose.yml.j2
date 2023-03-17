@@ -18,23 +18,24 @@ services:
     ports:
       - "{{ wireguard_address.split('/')[0] }}:8989:8989"
     environment:
-      - "EXECUTION_NODE={{ lido_validator_ejector_execution_node | join(',') }}"
-      - "CONSENSUS_NODE={{ lido_validator_ejector_consensus_node | join(',') }}"
-      - "LOCATOR_ADDRESS={{ lido_validator_ejector_locator_address }}"
-      - "STAKING_MODULE_ID={{ lido_validator_ejector_staking_module_id }}"
-      - "OPERATOR_ID={{ lido_validator_ejector_operator_id }}"
-      - "MESSAGES_LOCATION=messages"
-      - "MESSAGES_PASSWORD=pass"
-      - "BLOCKS_PRELOAD=7200"
-      - "BLOCKS_LOOP=32"
-      - "JOB_INTERVAL=384000"
-      - "HTTP_PORT={{ lido_validator_ejector_prometheus_port }}"
-      - "RUN_METRICS=true"
-      - "RUN_HEALTH_CHECK=true"
-      - "LOGGER_LEVEL=info"
-      - "LOGGER_FORMAT=json"
-      - "LOGGER_SECRETS=[\"test\"]"
-      - "DRY_RUN=false"
+      - EXECUTION_NODE={{ lido_validator_ejector_execution_node | join(',') }}
+      - CONSENSUS_NODE={{ lido_validator_ejector_consensus_node | join(',') }}
+      - LOCATOR_ADDRESS={{ lido_validator_ejector_locator_address }}
+      - ORACLE_ADDRESSES_ALLOWLIST=["{{ validator_ejector_oracle_addresses_allowlist | join('","') }}"]
+      - STAKING_MODULE_ID={{ lido_validator_ejector_staking_module_id }}
+      - OPERATOR_ID={{ lido_validator_ejector_operator_id }}
+      - MESSAGES_LOCATION=messages
+      - MESSAGES_PASSWORD=pass
+      - BLOCKS_PRELOAD=7200
+      - BLOCKS_LOOP=32
+      - JOB_INTERVAL=384000
+      - HTTP_PORT={{ lido_validator_ejector_prometheus_port }}
+      - RUN_METRICS=true
+      - RUN_HEALTH_CHECK=true
+      - LOGGER_LEVEL=info
+      - LOGGER_FORMAT=json
+      - LOGGER_SECRETS=[\"test\"]
+      - DRY_RUN=false
     volumes:
       - {{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages:/messages"
     ports:
