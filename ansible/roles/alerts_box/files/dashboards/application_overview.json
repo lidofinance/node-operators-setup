@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -23,7 +26,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 14282,
   "graphTooltip": 0,
-  "iteration": 1661439951730,
+  "id": 6,
+  "iteration": 1679068382028,
   "links": [
     {
       "asDropdown": false,
@@ -82,219 +86,51 @@
   "panels": [
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 29,
+      "id": 52,
       "panels": [],
-      "title": "General",
+      "title": "Applications",
       "type": "row"
     },
     {
-      "cards": {},
-      "color": {
-        "cardColor": "#b4ff00",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateOranges",
-        "exponent": 0.5,
-        "mode": "spectrum"
-      },
-      "dataFormat": "tsbuckets",
-      "description": "Response time distributed by range from 0 to XX. Each bucket contains count of requests with response time below the margin (see bucket's name).\n\nFor example:\n\n- 50 ms - count of responses with 0 < X < 50ms\n- 100 ms - count of responses with  < X < 100ms\n- 200 ms - count of responses with  < X < 200ms\n- ...\n- +Inf - count of responses with  < X < Infinity\n\nWhere last bucket includes all requests.\n\nFor additional information on histograms see [this article](https://prometheus.io/docs/practices/histograms/).\n",
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "heatmap": {},
-      "hideZeroBuckets": true,
-      "highlightCards": true,
-      "id": 49,
-      "legend": {
-        "show": true
-      },
-      "links": [
-        {
-          "title": "More details at \"Weblog Overview\"",
-          "url": "/d/RpNVP_Wnz/weblog-overview-go-d?${__all_variables}"
-        }
-      ],
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "exemplar": false,
-          "expr": "sum(irate(netdata_web_log_requests_processing_time_histogram_total{env=~\"$env\",instance=~\"${host}:.+\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"}[10m])) by (dimension)",
-          "format": "heatmap",
-          "interval": "",
-          "legendFormat": "{{dimension}}",
-          "refId": "A"
-        }
-      ],
-      "title": "HTTP Timings (total, ${host})",
-      "tooltip": {
-        "show": true,
-        "showHistogram": true
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "yAxis": {
-        "format": "short",
-        "logBase": 1,
-        "show": true
-      },
-      "yBucketBound": "auto"
-    },
-    {
       "datasource": {
-        "type": "loki",
-        "uid": "Loki"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "light-green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 50
-              },
-              {
-                "color": "orange",
-                "value": 100
-              },
-              {
-                "color": "red",
-                "value": 500
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "id": 55,
-      "maxDataPoints": 1,
-      "options": {
-        "basemap": {
-          "config": {
-            "server": "streets"
-          },
-          "name": "Layer 0",
-          "type": "esri-xyz"
-        },
-        "controls": {
-          "mouseWheelZoom": true,
-          "showAttribution": true,
-          "showDebug": false,
-          "showScale": false,
-          "showZoom": true
-        },
-        "layers": [
-          {
-            "config": {
-              "color": {
-                "field": "Value",
-                "fixed": "dark-green"
-              },
-              "fillOpacity": 0.3,
-              "shape": "circle",
-              "showLegend": true,
-              "size": {
-                "field": "Value",
-                "fixed": 5,
-                "max": 50,
-                "min": 10
-              }
-            },
-            "location": {
-              "lookup": "Metric",
-              "mode": "lookup"
-            },
-            "name": "Layer 1",
-            "type": "markers"
-          }
-        ],
-        "view": {
-          "id": "zero",
-          "lat": 0,
-          "lon": 0,
-          "zoom": 1
-        }
-      },
-      "pluginVersion": "8.4.6",
-      "targets": [
-        {
-          "expr": "sum by (country) (count_over_time({job=\"nginx\",env=~\"$env\",instance=~\"$host\",source=~\"$source\",vhost=~\"$web_log_target\",status=~\"${http_status_code}\",method=~\"${http_method}\"} | json | country != \"\" | __error__ = \"\" [$__interval]))",
-          "legendFormat": "{{country}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Visitors by country ($web_log_target)",
-      "transformations": [
-        {
-          "id": "seriesToRows",
-          "options": {}
-        }
-      ],
-      "type": "geomap"
-    },
-    {
-      "description": "HTTP requests by virtual host",
+      "description": "Cumulative cpu time consumed",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "requests/s",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
+            "drawStyle": "line",
+            "fillOpacity": 80,
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "lineInterpolation": "linear",
-            "lineWidth": 1,
+            "lineWidth": 0,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -305,6 +141,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -314,7 +151,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -322,148 +159,9 @@
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 1
       },
-      "id": 50,
-      "links": [
-        {
-          "title": "More details from Web Log",
-          "url": "/d/RpNVP_Wnz/weblog-overview-go-d?${__all_variables}"
-        }
-      ],
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "exemplar": true,
-          "expr": "sum(irate(netdata_web_log_vhost_requests_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"}[10m])) by (dimension) > 0",
-          "interval": "",
-          "legendFormat": "{{dimension}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Requests by Virtual host",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
-      },
-      "gridPos": {
-        "h": 15,
-        "w": 12,
-        "x": 12,
-        "y": 11
-      },
-      "id": 53,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "Loki"
-          },
-          "expr": "{job=\"nginx\",env=~\"$env\",instance=~\"$host\",source=~\"$source\",vhost=~\"$web_log_target\",status=~\"${http_status_code}\",method=~\"${http_method}\"} |~ \"$search\" | json | line_format \"➡️ {{.status}} for {{.request_method}} {{.request_uri}} from {{.cf_connecting_ip}}/{{.country}}\"",
-          "refId": "A"
-        }
-      ],
-      "title": "Access logs ($web_log_target)",
-      "type": "logs"
-    },
-    {
-      "description": "HTTP response codes:\n\n- 1xx Informational\n- 2xx Success\n- 3xx Redirection\n- 4xx Client Error\n- 5xx Server Error\n\nFor additional info see [this article](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "requests/s",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "id": 45,
-      "links": [
-        {
-          "title": "More details from Web Log",
-          "url": "/d/RpNVP_Wnz/weblog-overview-go-d?${__all_variables}"
-        }
-      ],
+      "id": 32,
       "options": {
         "legend": {
           "calcs": [
@@ -478,6 +176,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "8.1.5",
       "targets": [
         {
           "datasource": {
@@ -485,41 +184,80 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(irate(netdata_web_log_status_code_responses_total{env=~\"${env}\",instance=~\"${host}:.+\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\",dimension=~\"${http_status_code}\"}[10m])) by (dimension) > 0",
+          "expr": "(sum(irate(container_cpu_user_seconds_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100) + (sum(irate(container_cpu_system_seconds_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100)",
+          "hide": false,
           "interval": "",
-          "legendFormat": "{{dimension}}",
+          "legendFormat": "{{name}}",
           "refId": "A"
         }
       ],
-      "title": "HTTP Statuses",
+      "title": "CPU usage ($container)",
       "type": "timeseries"
     },
     {
-      "description": "Count of requests per HTTP method:\n\n- GET\n- POST\n- HEAD\n- PUT\n- DELETE\n\nAnd others. For additional information see [this article](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods).",
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 22,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "Loki"
+          },
+          "expr": "{source=~\"$source\",container_name=~\"$container\"} |~ \"$search\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Container logs ($container)",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "requests/s",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
+            "drawStyle": "line",
+            "fillOpacity": 80,
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "lineInterpolation": "linear",
-            "lineWidth": 1,
+            "lineWidth": 0,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -530,6 +268,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -543,7 +282,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -551,15 +290,9 @@
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 6
       },
-      "id": 54,
-      "links": [
-        {
-          "title": "More details from Web Log",
-          "url": "/d/RpNVP_Wnz/weblog-overview-go-d?${__all_variables}"
-        }
-      ],
+      "id": 37,
       "options": {
         "legend": {
           "calcs": [
@@ -567,15 +300,14 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
-          "sortBy": "Max",
-          "sortDesc": true
+          "placement": "right"
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "8.1.5",
       "targets": [
         {
           "datasource": {
@@ -583,440 +315,227 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(irate(netdata_web_log_http_method_requests_total{env=~\"$env\",instance=~\"${host}:.+\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\",dimension=~\"${http_method}\"}[10m])) by (dimension) > 0",
+          "expr": "(sum(irate(container_fs_reads_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)) + (sum(irate(container_fs_writes_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name))",
+          "hide": false,
           "interval": "",
-          "legendFormat": "{{dimension}}",
+          "legendFormat": "{{name}}",
           "refId": "A"
         }
       ],
-      "title": "HTTP methods",
+      "title": "Disk bandwidth $container)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 80,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(container_memory_usage_bytes{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory Usage ($container)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 80,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "(sum(irate(container_network_receive_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)) + (sum(irate(container_network_transmit_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Network Traffic ($container)",
       "type": "timeseries"
     },
     {
       "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 26
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
-      "id": 52,
-      "panels": [
-        {
-          "description": "Cumulative cpu time consumed",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 80,
-                "gradientMode": "hue",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 0,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "normal"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "percent"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 5,
-            "w": 12,
-            "x": 0,
-            "y": 2
-          },
-          "id": 32,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "right"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.5",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "exemplar": true,
-              "expr": "(sum(irate(container_cpu_user_seconds_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100) + (sum(irate(container_cpu_system_seconds_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100)",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{name}}",
-              "refId": "A"
-            }
-          ],
-          "title": "CPU usage ($container)",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "Loki"
-          },
-          "gridPos": {
-            "h": 20,
-            "w": 12,
-            "x": 12,
-            "y": 2
-          },
-          "id": 22,
-          "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": true,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "Loki"
-              },
-              "expr": "{env=~\"$env\",source=~\"$source\",container_name=~\"$container\"} |~ \"$search\"",
-              "refId": "A"
-            }
-          ],
-          "title": "Container logs ($container)",
-          "type": "logs"
-        },
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 80,
-                "gradientMode": "hue",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 0,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "normal"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "Bps"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 5,
-            "w": 12,
-            "x": 0,
-            "y": 7
-          },
-          "id": 37,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "right"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.5",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "exemplar": true,
-              "expr": "(sum(irate(container_fs_reads_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)) + (sum(irate(container_fs_writes_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name))",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{name}}",
-              "refId": "A"
-            }
-          ],
-          "title": "Disk bandwidth $container)",
-          "type": "timeseries"
-        },
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 80,
-                "gradientMode": "hue",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 0,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "normal"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 5,
-            "w": 12,
-            "x": 0,
-            "y": 12
-          },
-          "id": 35,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "right"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.5",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "exemplar": true,
-              "expr": "sum(container_memory_usage_bytes{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{name}}",
-              "refId": "A"
-            }
-          ],
-          "title": "Memory Usage ($container)",
-          "type": "timeseries"
-        },
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 80,
-                "gradientMode": "hue",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 0,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "normal"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "min": 0,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "Bps"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 5,
-            "w": 12,
-            "x": 0,
-            "y": 17
-          },
-          "id": 36,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "right"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.5",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "exemplar": true,
-              "expr": "(sum(irate(container_network_receive_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)) + (sum(irate(container_network_transmit_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name))",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{name}}",
-              "refId": "A"
-            }
-          ],
-          "title": "Network Traffic ($container)",
-          "type": "timeseries"
-        }
-      ],
-      "title": "Applications",
-      "type": "row"
-    },
-    {
-      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 21
       },
       "id": 31,
       "panels": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1056,8 +575,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1069,7 +587,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 3
+            "y": 2
           },
           "id": 15,
           "options": {
@@ -1094,7 +612,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_user_seconds_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100",
+              "expr": "sum(irate(container_cpu_user_seconds_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1105,6 +623,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1144,8 +666,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1161,7 +682,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 3
+            "y": 2
           },
           "id": 20,
           "options": {
@@ -1186,7 +707,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_system_seconds_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100",
+              "expr": "sum(irate(container_cpu_system_seconds_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name) *100",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1197,6 +718,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1236,8 +761,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1253,7 +777,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 8
+            "y": 7
           },
           "id": 9,
           "options": {
@@ -1278,7 +802,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(container_memory_rss{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
+              "expr": "sum(container_memory_rss{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1289,6 +813,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1328,8 +856,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1345,7 +872,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 8
+            "y": 7
           },
           "id": 14,
           "options": {
@@ -1370,7 +897,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(container_memory_cache{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
+              "expr": "sum(container_memory_cache{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}) by (name)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1381,6 +908,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1420,8 +951,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1437,7 +967,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 13
+            "y": 12
           },
           "id": 42,
           "options": {
@@ -1462,7 +992,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_fs_reads_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
+              "expr": "sum(irate(container_fs_reads_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1473,6 +1003,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1512,8 +1046,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1529,7 +1062,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 13
+            "y": 12
           },
           "id": 43,
           "options": {
@@ -1554,7 +1087,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_fs_writes_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
+              "expr": "sum(irate(container_fs_writes_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1565,6 +1098,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1604,8 +1141,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1621,7 +1157,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 18
+            "y": 17
           },
           "id": 4,
           "options": {
@@ -1646,7 +1182,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_network_receive_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
+              "expr": "sum(irate(container_network_receive_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1657,6 +1193,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1696,8 +1236,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1713,7 +1252,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 18
+            "y": 17
           },
           "id": 6,
           "options": {
@@ -1738,7 +1277,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "sum(irate(container_network_transmit_bytes_total{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
+              "expr": "sum(irate(container_network_transmit_bytes_total{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}[5m])) by (name)",
               "interval": "",
               "legendFormat": "{{name}}",
               "refId": "A"
@@ -1748,6 +1287,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1787,8 +1330,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1800,7 +1342,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 23
+            "y": 22
           },
           "id": 38,
           "options": {
@@ -1825,7 +1367,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "container_processes{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
+              "expr": "container_processes{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1836,6 +1378,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1875,8 +1421,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1888,7 +1433,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 23
+            "y": 22
           },
           "id": 41,
           "options": {
@@ -1913,7 +1458,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "container_threads{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
+              "expr": "container_threads{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1924,6 +1469,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1963,8 +1512,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1976,7 +1524,7 @@
             "h": 5,
             "w": 12,
             "x": 0,
-            "y": 28
+            "y": 27
           },
           "id": 40,
           "options": {
@@ -2001,7 +1549,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "container_file_descriptors{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
+              "expr": "container_file_descriptors{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -2012,6 +1560,10 @@
           "type": "timeseries"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -2051,8 +1603,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -2064,7 +1615,7 @@
             "h": 5,
             "w": 12,
             "x": 12,
-            "y": 28
+            "y": 27
           },
           "id": 39,
           "options": {
@@ -2089,7 +1640,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "container_sockets{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
+              "expr": "container_sockets{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -2113,25 +1664,29 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 22
       },
       "id": 19,
       "panels": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "fieldConfig": {
             "defaults": {
               "custom": {
                 "align": "auto",
                 "displayMode": "auto",
-                "filterable": false
+                "filterable": false,
+                "inspect": false
               },
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2197,7 +1752,7 @@
             "h": 12,
             "w": 12,
             "x": 0,
-            "y": 4
+            "y": 3
           },
           "id": 17,
           "options": {
@@ -2211,7 +1766,7 @@
             "showHeader": true,
             "sortBy": []
           },
-          "pluginVersion": "8.4.6",
+          "pluginVersion": "8.5.15",
           "targets": [
             {
               "datasource": {
@@ -2276,192 +1831,9 @@
         },
         {
           "datasource": {
-            "type": "loki",
-            "uid": "Loki"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "displayMode": "auto",
-                "filterable": false
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Value #A"
-                },
-                "properties": [
-                  {
-                    "id": "custom.displayMode",
-                    "value": "color-background"
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "continuous-reds"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 12,
-            "w": 12,
-            "x": 12,
-            "y": 4
-          },
-          "id": 56,
-          "maxDataPoints": 1,
-          "options": {
-            "footer": {
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "frameIndex": 1,
-            "showHeader": true,
-            "sortBy": []
-          },
-          "pluginVersion": "8.4.6",
-          "targets": [
-            {
-              "expr": "topk(25, sum(count_over_time({job=\"nginx\",status=~\"${http_status_code}\",vhost=~\"${web_log_target}\"} | json | __error__=\"\" | line_format \"{{.vhost}}\" [$__range])) by (vhost, request_uri))",
-              "instant": true,
-              "legendFormat": "",
-              "range": false,
-              "refId": "A"
-            }
-          ],
-          "title": "HTTP statuses ($web_log_target, $http_status_code)",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true
-                },
-                "indexByName": {
-                  "Time": 0,
-                  "Value #A": 3,
-                  "request_uri": 2,
-                  "vhost": 1
-                },
-                "renameByName": {
-                  "Time": "",
-                  "Value #A": "Total",
-                  "request_uri": "URL",
-                  "vhost": "Domain"
-                }
-              }
-            },
-            {
-              "id": "sortBy",
-              "options": {
-                "fields": {},
-                "sort": [
-                  {
-                    "desc": true,
-                    "field": "Total"
-                  }
-                ]
-              }
-            }
-          ],
-          "type": "table"
-        },
-        {
-          "description": "",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "fillOpacity": 70,
-                "lineWidth": 1
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "red",
-                    "value": null
-                  },
-                  {
-                    "color": "#EAB839",
-                    "value": 600
-                  },
-                  {
-                    "color": "green",
-                    "value": 1800
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 12,
-            "w": 12,
-            "x": 0,
-            "y": 16
-          },
-          "id": 24,
-          "options": {
-            "colWidth": 0.9,
-            "legend": {
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "rowHeight": 0.9,
-            "showValue": "never",
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "8.1.5",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "exemplar": true,
-              "expr": "time() - max(container_start_time_seconds{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\",container_label_com_docker_compose_service=~\".+\"}) by (name)",
-              "instant": false,
-              "interval": "",
-              "intervalFactor": 3,
-              "legendFormat": "{{name}}",
-              "refId": "A"
-            }
-          ],
-          "title": "Container uptime ($container)",
-          "type": "status-history"
-        },
-        {
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -2503,8 +1875,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -2516,7 +1887,7 @@
             "h": 12,
             "w": 12,
             "x": 12,
-            "y": 16
+            "y": 3
           },
           "id": 26,
           "options": {
@@ -2541,7 +1912,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "count(container_tasks_state{env=~\"$env\",instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"} > 0) by (state)",
+              "expr": "count(container_tasks_state{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\"} > 0) by (state)",
               "interval": "",
               "legendFormat": "{{state}}",
               "refId": "A"
@@ -2549,6 +1920,81 @@
           ],
           "title": "Containers by state",
           "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "fillOpacity": 70,
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red"
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 600
+                  },
+                  {
+                    "color": "green",
+                    "value": 1800
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 12,
+            "x": 0,
+            "y": 15
+          },
+          "id": 24,
+          "options": {
+            "colWidth": 0.9,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "rowHeight": 0.9,
+            "showValue": "never",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.1.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "exemplar": true,
+              "expr": "time() - max(container_start_time_seconds{instance=~\"$host:.+\",source=~\"$source\",name=~\"$container\",container_label_com_docker_compose_service=~\".+\"}) by (name)",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 3,
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Container uptime ($container)",
+          "type": "status-history"
         }
       ],
       "title": "Misc",
@@ -2556,7 +2002,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 35,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [
     "cadvisor",
@@ -2582,42 +2028,7 @@
           "type": "prometheus",
           "uid": "Prometheus"
         },
-        "definition": "label_values(up{env=~\".+\",job=~\"cadvisor.*\"},env)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Env",
-        "multi": true,
-        "name": "env",
-        "options": [],
-        "query": {
-          "query": "label_values(up{env=~\".+\",job=~\"cadvisor.*\"},env)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 5,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".+",
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "Prometheus"
-        },
-        "definition": "label_values(container_cpu_user_seconds_total{env=~\"$env\",job=~\"cadvisor.*\"},source)",
+        "definition": "label_values(container_cpu_user_seconds_total{job=~\"cadvisor.*\"},source)",
         "hide": 0,
         "includeAll": true,
         "label": "Host",
@@ -2625,7 +2036,7 @@
         "name": "source",
         "options": [],
         "query": {
-          "query": "label_values(container_cpu_user_seconds_total{env=~\"$env\",job=~\"cadvisor.*\"},source)",
+          "query": "label_values(container_cpu_user_seconds_total{job=~\"cadvisor.*\"},source)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -2648,7 +2059,7 @@
           "type": "prometheus",
           "uid": "Prometheus"
         },
-        "definition": "label_values(container_cpu_user_seconds_total{env=~\"$env\",job=~\"cadvisor.*\",source=~\"$source\"},instance)",
+        "definition": "label_values(container_cpu_user_seconds_total{job=~\"cadvisor.*\",source=~\"$source\"},instance)",
         "hide": 0,
         "includeAll": true,
         "label": "Source",
@@ -2656,7 +2067,7 @@
         "name": "host",
         "options": [],
         "query": {
-          "query": "label_values(container_cpu_user_seconds_total{env=~\"$env\",job=~\"cadvisor.*\",source=~\"$source\"},instance)",
+          "query": "label_values(container_cpu_user_seconds_total{job=~\"cadvisor.*\",source=~\"$source\"},instance)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -2683,7 +2094,7 @@
           "type": "prometheus",
           "uid": "Prometheus"
         },
-        "definition": "label_values(container_cpu_user_seconds_total{env=~\"$env\",instance=~\"$host\",job=~\"cadvisor.*\",source=~\"$source\",instance=~\"$host\"},name)",
+        "definition": "label_values(container_cpu_user_seconds_total{instance=~\"$host\",job=~\"cadvisor.*\",source=~\"$source\",instance=~\"$host\"},name)",
         "hide": 0,
         "includeAll": true,
         "label": "Container",
@@ -2691,104 +2102,7 @@
         "name": "container",
         "options": [],
         "query": {
-          "query": "label_values(container_cpu_user_seconds_total{env=~\"$env\",instance=~\"$host\",job=~\"cadvisor.*\",source=~\"$source\",instance=~\"$host\"},name)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".+",
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "Prometheus"
-        },
-        "definition": "label_values(netdata_web_log_status_code_responses_total{instance=~\"$host\",source=~\"${source}\"},chart)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Web Log",
-        "multi": true,
-        "name": "web_log_target",
-        "options": [],
-        "query": {
-          "query": "label_values(netdata_web_log_status_code_responses_total{instance=~\"$host\",source=~\"${source}\"},chart)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "web_log_(.+).responses_by_status_code",
-        "skipUrlSync": false,
-        "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".+",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "Prometheus"
-        },
-        "definition": "label_values(netdata_web_log_status_code_responses_total{instance=~\"$host\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"},dimension)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "HTTP Status",
-        "multi": true,
-        "name": "http_status_code",
-        "options": [],
-        "query": {
-          "query": "label_values(netdata_web_log_status_code_responses_total{instance=~\"$host\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"},dimension)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".+",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "Prometheus"
-        },
-        "definition": "label_values(netdata_web_log_http_method_requests_total{instance=~\"$host\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"},dimension)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "HTTP Method",
-        "multi": true,
-        "name": "http_method",
-        "options": [],
-        "query": {
-          "query": "label_values(netdata_web_log_http_method_requests_total{instance=~\"$host\",source=~\"${source}\",chart=~\"web_log_($web_log_target)\\\\..+\"},dimension)",
+          "query": "label_values(container_cpu_user_seconds_total{instance=~\"$host\",job=~\"cadvisor.*\",source=~\"$source\",instance=~\"$host\"},name)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -2843,7 +2157,7 @@
   },
   "timezone": "",
   "title": "Application Overview",
-  "uid": "A2DfpZD7z",
-  "version": 4,
+  "uid": "A2DfpZD7Z",
+  "version": 1,
   "weekStart": ""
 }
