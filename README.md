@@ -26,6 +26,7 @@ Also, we recommend having a data of nodes and system on different volumes. In ot
      - ETHEREUM_NODES_IP - IP address of your ethereum_nodes host
      - VALIDATORS_EJECTOR_IP - IP address of your validators_ejector host
      - MONITORING_SERVER_IP - IP address of your monitoring_server host
+     - ENVIRONMENT - Environment of setup (testnet or mainnet)
      - TELEGRAM_BOT_TOKEN - Token of your telegram bot
      - TELEGRAM_CHAT_ID - chat_id of your channel for alerts
 
