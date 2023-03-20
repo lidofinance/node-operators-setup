@@ -194,7 +194,12 @@ clone_repo() {
 
 ansible_initial_run() {
   set +e
-  ansible all -i node-operators-setup/ansible/inventories/hosts.yml -m ping
+  if [ -f node-operators-setup/ansible/inventories/${ENVIRONMENT}.yml ]; then
+    ansible all -i node-operators-setup/ansible/inventories/${ENVIRONMENT}.yml -m ping
+  else
+    echo "No inventory file for ${ENVIRONMENT} environment"
+    exit 2
+  fi
   if [ $? -eq 0 ]; then
     echo -ne "${DATE} SSH connection by Ansible is succesful\n"
     echo -ne "\n"
@@ -202,10 +207,15 @@ ansible_initial_run() {
     echo -ne "${DATE} SSH connection by Ansible isn't successful\n"
     echo -ne "${DATE} Running Ansible to configure access by SSH\n"
     echo -ne "\n"
-    ansible-playbook -i ${REPO_NAME}/ansible/inventories/hosts.yml --ask-pass \
-      ${REPO_NAME}/ansible/playbooks/configure_ssh_access.yml \
-      -e "my_username=${CURRENT_USERNAME}" \
-      -e "my_public_key=\"$(cat $PUB_KEY)\""
+    if [ -f node-operators-setup/ansible/inventories/${ENVIRONMENT}.yml ]; then
+      ansible-playbook -i ${REPO_NAME}/ansible/inventories/${ENVIRONMENT}.yml --ask-pass \
+        ${REPO_NAME}/ansible/playbooks/configure_ssh_access.yml \
+        -e "my_username=${CURRENT_USERNAME}" \
+        -e "my_public_key=\"$(cat $PUB_KEY)\""
+    else
+      echo "No inventory file for ${ENVIRONMENT} environment"
+      exit 2
+    fi
   fi
   set -e
 }
@@ -213,9 +223,14 @@ ansible_initial_run() {
 ansible_run() {
   echo -ne "${DATE} Running Ansible with tag ${1}\n"
   export ANSIBLE_ROLES_PATH=${REPO_NAME}/ansible/roles/
-  ansible-playbook -i ${REPO_NAME}/ansible/inventories/hosts.yml \
-    ${REPO_NAME}/ansible/playbooks/site.yml \
-    -t ${1}
+  if [ -f node-operators-setup/ansible/inventories/${ENVIRONMENT}.yml ]; then
+    ansible-playbook -i ${REPO_NAME}/ansible/inventories/${ENVIRONMENT}.yml \
+      ${REPO_NAME}/ansible/playbooks/site.yml \
+      -t ${1}
+  else
+    echo "No inventory file for ${ENVIRONMENT} environment"
+    exit 2
+  fi
 }
 
 main() {

@@ -1,0 +1,76 @@
+---
+ethereum_nodes:
+  hosts:
+    ethereum-nodes-1:
+      ansible_host: "{{ lookup('env','ETHEREUM_NODES_IP') }}"
+      wireguard_address: "10.8.0.101/24"
+  vars:
+    lighthouse_node_metrics_port: 8008
+    node_jwtsecret: "{{ lookup('env','JWT_TOKEN') }}"
+    geth_node_authrpc_port: 8551
+    geth_node_metrics_port: 6060
+    geth_node_eth_network: "goerli"
+    lighthouse_node_sync_url: "https://goerli.beaconstate.info/"
+
+validators_ejector:
+  hosts:
+    validators-ejector-1:
+      ansible_host: "{{ lookup('env','VALIDATORS_EJECTOR_IP') }}"
+      wireguard_address: "10.8.0.102/24"
+  vars:
+    # Node API Keys
+    lido_keys_api_http_ext_port: 3000
+    lido_keys_api_image_tag: "@sha256:dc832c237fad48d3f0169ccc57bf54e76544145b238f1b917bd881fb59e2df44"
+    lido_keys_api_db_password: "{{ lookup('env','LIDO_KEYS_API_DB_PASSWORD') }}"
+    lido_keys_api_el_rpc_url_list:
+      - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
+    lido_keys_api_cl_api_url_list:
+      - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:5051"
+    # Validators Ejector
+    lido_validator_ejector_prometheus_port: 8989
+    lido_validator_ejector_image_tag: "@sha256:e5768026ddec080faa6d0ff27d3b043bc874855fbbd38d4f9789bea14dcf8592"
+    lido_validator_ejector_execution_node:
+      - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
+    lido_validator_ejector_consensus_node:
+      - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:5051"
+    lido_validator_ejector_operator_id: "{{ lookup('env','VALIDATOR_EJECTOR_OPERATOR_ID') }}"
+    lido_validator_ejector_staking_module_id: "{{ lookup('env','VALIDATOR_EJECTOR_STAKING_MODULE_ID') }}"
+    lido_validator_ejector_locator_address: "{{ lookup('env','VALIDATOR_EJECTOR_LOCATOR_ADDRESS') }}"
+    validator_ejector_oracle_addresses_allowlist:
+      - "0xfdA7E01B2718C511bF016030010572e833C7aE6A"
+      - "0xD3b1e36A372Ca250eefF61f90E833Ca070559970"
+      - "0x1a13648EE85386cC101d2D7762e2848372068Bc3"
+      - "0x3fF28f2EDE8358E288798afC23Ee299a503aD5C9"
+      - "0x4c75FA734a39f3a21C57e583c1c29942F021C6B7"
+      - "0xCFd533f909741B78a564e399F64C83B783c27597"
+      - "0x81E411f1BFDa43493D7994F82fb61A415F6b8Fd4"
+      - "0xb29dD2f6672C0DFF2d2f173087739A42877A5172"
+      - "0x3799bDA7B884D33F79CEC926af21160dc47fbe05"
+
+monitoring_server:
+  hosts:
+    monitoring-node-1:
+      ansible_host: "{{ lookup('env','MONITORING_SERVER_IP') }}"
+      wireguard_address: "10.8.0.103/24"
+  vars:
+    alerts_box_grafana_user: "{{ lookup('env','ALERTS_BOX_GRAFANA_USER') }}"
+    alerts_box_grafana_password: "{{ lookup('env','ALERTS_BOX_GRAFANA_PASSWORD') }}"
+    telegram_bot_token: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
+    telegram_chat_id: "{{ lookup('env','TELEGRAM_CHAT_ID') }}"
+
+all:
+  vars:
+    containers_basedir: "/srv"
+    compose_retries: 11
+    compose_retries_delay_sec: 3
+    docker_log_loki_url: "http://{{ (hostvars[groups.monitoring_server[0]]).wireguard_address.split('/')[0] }}:3100/loki/api/v1/push"
+    docker_loki_plugin_required: true
+    docker_loki_batch_size: "102400"
+    docker_loki_batch_wait: "1s"
+    docker_loki_timeout: "10s"
+    docker_loki_backoff_min: "100ms"
+    docker_loki_backoff_max: "10s"
+    docker_loki_retries: "10"
+    docker_loki_buffer_size_max: "5m"
+    docker_loki_mode: "non-blocking"
+    docker_loki_external_labels: "{% raw %}container_name={{.Name}}{% endraw %}"
