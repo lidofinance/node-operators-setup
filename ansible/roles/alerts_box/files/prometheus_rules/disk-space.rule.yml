@@ -1,0 +1,23 @@
+---
+groups:
+  - name: node_exporter
+    rules:
+      - alert: disk usage
+        annotations:
+          info: disk usage, usage ~{{ $value }}% on {{ $labels.mountpoint }}
+        expr:
+          (100 - ceil((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) > 70)
+          and
+          (100 - ceil((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) < 90)
+        for: 10m
+        labels:
+          severity: warning
+      - alert: disk usage
+        annotations:
+          info: disk usage, usage ~{{ $value }}% on {{ $labels.mountpoint }}
+        expr:
+          100 - ceil((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes)
+          >= 90
+        for: 10m
+        labels:
+          severity: critical

@@ -1,0 +1,12 @@
+---
+groups:
+  - name: node_exporter
+    rules:
+      - alert: Host Out Of Memory
+        annotations:
+          summary: Host out of memory (instance {{ $labels.instance }})
+          description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}%"
+        expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+        for: 5m
+        labels:
+          severity: warning

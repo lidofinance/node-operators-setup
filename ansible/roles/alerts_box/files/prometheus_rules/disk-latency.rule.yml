@@ -1,0 +1,16 @@
+---
+groups:
+  - name: disk_latency
+    rules:
+      - alert: Disk latency is over threshold
+        expr:
+          irate(node_disk_io_time_seconds_total[5m]) /
+          (
+            irate(node_disk_reads_completed_total[5m]) + 
+            irate(node_disk_writes_completed_total[5m])
+          ) * 1000 >= 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          info: !unsafe "/dev/{{ $labels.device }} latency is {{ $value }} msec"

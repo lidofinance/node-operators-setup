@@ -1,0 +1,24 @@
+---
+rule_files:
+  - disk_latency.rule.yml
+evaluation_interval: 5m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'node_disk_reads_completed_total{device="vdb",instance="127.0.0.1:9100"}'
+        values: "0+400x100"
+      - series: 'node_disk_writes_completed_total{device="vdb",instance="127.0.0.1:9100"}'
+        values: "0+200x100"
+      - series: 'node_disk_io_time_seconds_total{device="vdb",instance="127.0.0.1:9100"}'
+        values: "1+60x100"
+
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: Disk latency is over threshold
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              instance: "127.0.0.1:9100"
+              device: vdb
+            exp_annotations:
+              info: "/dev/vdb latency is 100 msec"

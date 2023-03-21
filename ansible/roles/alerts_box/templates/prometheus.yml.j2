@@ -12,7 +12,7 @@ alerting:
     - targets: ["alertmanager:{{ alerts_box_alertmanager_port }}"]
 
 rule_files:
-  - prometheus_rules/*.rule.yml
+  - rules/*.rule.yml
 
 scrape_configs:
 

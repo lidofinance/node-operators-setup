@@ -132,7 +132,7 @@
   become: true
   copy:
     src: "{{ item }}"
-    dest: "{{ containers_basedir }}/{{ ansible_role_name }}/prometheus/rules/{{ item }}"
+    dest: "{{ containers_basedir }}/{{ ansible_role_name }}/prometheus/rules/{{ item | basename }}"
     owner: root
     group: root
     mode: 0644
