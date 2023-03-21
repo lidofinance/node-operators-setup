@@ -48,6 +48,8 @@ services:
     volumes:
       - {{ containers_basedir }}/{{ ansible_role_name }}/geth:/srv
       - {{ containers_basedir }}/{{ ansible_role_name }}/jwtsecret:/jwtsecret
+    networks:
+      - nodes_network
     ports:
       - {{ geth_node_http_port }}:{{ geth_node_http_port }}
       - {{ geth_node_authrpc_port }}:{{ geth_node_authrpc_port }}
