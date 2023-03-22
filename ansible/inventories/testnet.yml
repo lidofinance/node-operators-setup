@@ -11,6 +11,7 @@ ethereum_nodes:
     geth_node_metrics_port: 6060
     geth_node_eth_network: "goerli"
     lighthouse_node_sync_url: "https://goerli.beaconstate.info/"
+    lighthouse_node_beacon_network: "goerli"
 
 validators_ejector:
   hosts:

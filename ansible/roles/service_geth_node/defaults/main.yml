@@ -2,7 +2,7 @@
 # geth
 geth_node_compose_project: geth-node
 
-geth_node_image_tag: ":v1.10.23"
+geth_node_image_tag: ":v1.11.4"
 geth_node_cpu_limit: 3
 geth_node_mem_limit: 7G
 
