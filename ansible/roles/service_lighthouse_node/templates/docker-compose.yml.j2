@@ -56,8 +56,8 @@ services:
     networks:
       - nodes_network
     ports:
-      - "{{ lighthouse_node_api_port }}:{{ lighthouse_node_api_port }}"
-      - "{{ lighthouse_node_metrics_port }}:{{ lighthouse_node_metrics_port }}"
+      - {{ lighthouse_node_api_port }}:{{ lighthouse_node_api_port }}
+      - {{ wireguard_address.split('/')[0] }}:{{ lighthouse_node_metrics_port }}:{{ lighthouse_node_metrics_port }}
 {% if lighthouse_node_logging_driver|d('not-loki') == "loki" %}
     logging:
       driver: "loki"
