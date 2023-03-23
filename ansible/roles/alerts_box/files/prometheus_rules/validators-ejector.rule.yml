@@ -1,0 +1,32 @@
+groups:
+  - name: Validators-Ejector
+    rules:
+      - alert: ValidatorsEjectorExitMessages
+        expr: validator_ejector_exit_messages > 1
+        labels:
+          severity: warning
+          service: validator_ejector
+        annotations:
+          summary: Validators-Ejector exit messages amount too high.
+          description: "{{ $value }} exit messages in Validators-Ejector queue"
+          runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+      - alert: ValidatorEjectorJobErrors
+        expr: validator_ejector_job_duration_seconds_bucket{le="+Inf",result="error"} > 1
+        labels:
+          severity: warning
+          service: validator_ejector
+        annotations:
+          summary: Validators-Ejector job errors
+          description: "{{ $value }} job errors in Validators-Ejector"
+          runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+      - alert: ValidatorEjectorExitActionError
+        expr: validator_ejector_exit_actions{result="error"} > 1
+        labels:
+          severity: critical
+          service: validator_ejector
+        annotations:
+          summary: Validators-Ejector exit action error
+          description: "{{ $value }} exit action error in Validators-Ejector"
+          runbook: "https://hackmd.io/@lido/Byue6SQxh"

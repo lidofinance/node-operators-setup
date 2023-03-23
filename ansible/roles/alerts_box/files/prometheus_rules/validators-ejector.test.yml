@@ -1,0 +1,56 @@
+rule_files:
+  - validators-ejector.rule.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_exit_messages{service="validator_ejector"}
+        values: 3
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorsEjectorExitMessages
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              service: validator_ejector
+            exp_annotations:
+              summary: Validators-Ejector exit messages amount too high.
+              description: "3 exit messages in Validators-Ejector queue"
+              runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_job_duration_seconds_bucket{le="+Inf",result="error",service="validator_ejector"}
+        values: 4
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorEjectorJobErrors
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              service: validator_ejector
+              le: +Inf
+              result: error
+            exp_annotations:
+              summary: Validators-Ejector job errors
+              description: "4 job errors in Validators-Ejector"
+              runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_exit_actions{result="error",service="validator_ejector"}
+        values: 5
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorEjectorExitActionError
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              service: validator_ejector
+              result: error
+            exp_annotations:
+              summary: Validators-Ejector exit action error
+              description: "5 exit action error in Validators-Ejector"
+              runbook: "https://hackmd.io/@lido/Byue6SQxh"
