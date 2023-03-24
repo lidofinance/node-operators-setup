@@ -35,7 +35,7 @@ services:
       - LOGGER_SECRETS=["test"]
       - DRY_RUN=false
     volumes:
-      - {{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages:/messages"
+      - {{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages:/messages
     ports:
       - {{ wireguard_address.split('/')[0] }}:{{ lido_validator_ejector_prometheus_port }}:{{ lido_validator_ejector_prometheus_port }}
 {% if validator_ejector_logging_driver|d('not-loki') == "loki" %}
