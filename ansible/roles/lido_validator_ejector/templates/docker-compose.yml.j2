@@ -22,7 +22,7 @@ services:
       - ORACLE_ADDRESSES_ALLOWLIST=["{{ validator_ejector_oracle_addresses_allowlist | join('","') }}"]
       - STAKING_MODULE_ID={{ lido_validator_ejector_staking_module_id }}
       - OPERATOR_ID={{ lido_validator_ejector_operator_id }}
-      - MESSAGES_LOCATION=messages
+      - MESSAGES_LOCATION=/messages
       - MESSAGES_PASSWORD=pass
       - BLOCKS_PRELOAD=50000
       - BLOCKS_LOOP=64
@@ -32,7 +32,7 @@ services:
       - RUN_HEALTH_CHECK=true
       - LOGGER_LEVEL=info
       - LOGGER_FORMAT=json
-      - LOGGER_SECRETS=[\"test\"]
+      - LOGGER_SECRETS=["test"]
       - DRY_RUN=false
     volumes:
       - {{ containers_basedir }}/{{ lido_validator_ejector_compose_project }}/messages:/messages"
