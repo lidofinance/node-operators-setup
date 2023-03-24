@@ -51,8 +51,8 @@ services:
     networks:
       - nodes_network
     ports:
-      - {{ geth_node_http_port }}:{{ geth_node_http_port }}
-      - {{ geth_node_authrpc_port }}:{{ geth_node_authrpc_port }}
+      - {{ wireguard_address.split('/')[0] }}:{{ geth_node_http_port }}:{{ geth_node_http_port }}
+      - {{ wireguard_address.split('/')[0] }}:{{ geth_node_authrpc_port }}:{{ geth_node_authrpc_port }}
       - {{ wireguard_address.split('/')[0] }}:{{ geth_node_metrics_port }}:{{ geth_node_metrics_port }}
 {% if geth_node_logging_driver|d('not-loki') == "loki" %}
     logging:
