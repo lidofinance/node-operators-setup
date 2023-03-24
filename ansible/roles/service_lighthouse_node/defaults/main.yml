@@ -4,7 +4,7 @@ lighthouse_node_compose_project: lighthouse-node
 
 # https://lighthouse-book.sigmaprime.io/docker.html#available-docker-images
 lighthouse_node_image_name: "sigp/lighthouse"
-lighthouse_node_image_tag: ":v3.1.0-modern"
+lighthouse_node_image_tag: ":v3.5.1-modern"
 
 lighthouse_node_cpu_limit: 4
 lighthouse_node_mem_limit: 8G
