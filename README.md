@@ -38,6 +38,8 @@ Also, we recommend having a data of nodes and system on different volumes. In ot
 4. After successful installation, you can find your grafana credentials in file `secret_variables`, the same directory you had ran your script base.sh
    Enter the IP address of your monitoring server to a browser and enter the login and password for grafana.
 
+5. To upgrade your installation, just run the command again `curl -L https://raw.githubusercontent.com/lidofinance/node-operators-setup/master/base.sh | bash -s`
+
 ### Additional information
 
 In case you want use your self login and password for grafana and internal database you should create file with next values
@@ -55,7 +57,6 @@ secret_variables file contents
 ### TODO
 
 - Add additional dashboards
-- Add alerts to alertmanager
 - Tests
 - Mount extra disks
 - Remove extra variables from logs block

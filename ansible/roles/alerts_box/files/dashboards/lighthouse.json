@@ -24,8 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
-  "iteration": 1679069269822,
+  "iteration": 1679568532905,
   "links": [
     {
       "asDropdown": false,
@@ -105,9 +104,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -198,9 +195,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -278,9 +273,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -346,9 +339,7 @@
         "justifyMode": "center",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -413,9 +404,7 @@
         "justifyMode": "center",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -483,9 +472,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -555,9 +542,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -628,9 +613,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -693,9 +676,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "max"
-          ],
+          "calcs": ["max"],
           "fields": "",
           "values": false
         },
@@ -766,9 +747,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -831,9 +810,7 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "max"
-          ],
+          "calcs": ["max"],
           "fields": "",
           "values": false
         },
@@ -941,11 +918,7 @@
       "id": 40,
       "options": {
         "legend": {
-          "calcs": [
-            "min",
-            "mean",
-            "max"
-          ],
+          "calcs": ["min", "mean", "max"],
           "displayMode": "table",
           "placement": "right"
         },
@@ -1324,7 +1297,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1415,7 +1389,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "#EAB839",
@@ -1506,7 +1481,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "green",
@@ -1568,7 +1544,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1592,9 +1569,7 @@
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -1632,7 +1607,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1656,9 +1632,7 @@
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -1697,7 +1671,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1722,9 +1697,7 @@
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -1763,7 +1736,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "green",
@@ -1788,9 +1762,7 @@
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -1829,7 +1801,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   }
                 ]
               },
@@ -1850,9 +1823,7 @@
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -1921,11 +1892,11 @@
                 "type": "loki",
                 "uid": "P8E80F9AEF21F6940"
               },
-              "expr": "{service=~\"$service\"} | json | level=~\".*($log_level).*\" |~ \"$search\"",
+              "expr": "{compose_project=\"lighthouse-node\"} | json | level=~\".*($log_level).*\" |~ \"$search\"",
               "refId": "A"
             }
           ],
-          "title": "Logs ($container)",
+          "title": "Logs lighthouse-node",
           "type": "logs"
         }
       ],
@@ -1991,7 +1962,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2086,7 +2058,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2181,7 +2154,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2276,7 +2250,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2404,9 +2379,7 @@
                   "id": "byNames",
                   "options": {
                     "mode": "exclude",
-                    "names": [
-                      "172.25.0.2:8000"
-                    ],
+                    "names": ["172.25.0.2:8000"],
                     "prefix": "All except:",
                     "readOnly": true
                   }
@@ -2523,9 +2496,7 @@
                   "id": "byNames",
                   "options": {
                     "mode": "exclude",
-                    "names": [
-                      "172.25.0.2:8000"
-                    ],
+                    "names": ["172.25.0.2:8000"],
                     "prefix": "All except:",
                     "readOnly": true
                   }
@@ -2738,7 +2709,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2754,7 +2726,7 @@
             "h": 7,
             "w": 10,
             "x": 0,
-            "y": 7
+            "y": 24
           },
           "id": 72,
           "links": [],
@@ -2859,25 +2831,19 @@
             "h": 7,
             "w": 4,
             "x": 10,
-            "y": 7
+            "y": 24
           },
           "id": 7,
           "options": {
-            "displayLabels": [
-              "value"
-            ],
+            "displayLabels": ["value"],
             "legend": {
               "displayMode": "table",
               "placement": "bottom",
-              "values": [
-                "value"
-              ]
+              "values": ["value"]
             },
             "pieType": "pie",
             "reduceOptions": {
-              "calcs": [
-                "last"
-              ],
+              "calcs": ["last"],
               "fields": "",
               "values": false
             },
@@ -2948,7 +2914,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2964,7 +2931,7 @@
             "h": 7,
             "w": 10,
             "x": 14,
-            "y": 7
+            "y": 24
           },
           "id": 74,
           "interval": "",
@@ -3058,7 +3025,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -3074,7 +3042,7 @@
             "h": 5,
             "w": 8,
             "x": 0,
-            "y": 8
+            "y": 25
           },
           "id": 64,
           "links": [],
@@ -3152,7 +3120,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -3168,7 +3137,7 @@
             "h": 5,
             "w": 8,
             "x": 8,
-            "y": 8
+            "y": 25
           },
           "id": 66,
           "links": [],
@@ -3246,7 +3215,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -3262,7 +3232,7 @@
             "h": 5,
             "w": 8,
             "x": 16,
-            "y": 8
+            "y": 25
           },
           "id": 68,
           "links": [],
@@ -3311,12 +3281,8 @@
         "allValue": "[A-Z]{4,}",
         "current": {
           "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "hide": 0,
         "includeAll": true,
