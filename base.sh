@@ -190,8 +190,7 @@ clone_repo() {
     # NOW WE HAVE TO AUTHENTICATE SINCE IT'S A PRIVATE REPO
     git clone https://github.com/lidofinance/${REPO_NAME}
   else
-    rm -rf ${REPO_NAME}
-    git clone https://github.com/lidofinance/${REPO_NAME}
+    GIT_DIR=${REPO_NAME}/.git git pull origin main
   fi
 }
 
