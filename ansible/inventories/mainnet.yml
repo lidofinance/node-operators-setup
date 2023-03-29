@@ -31,7 +31,7 @@ validators_ejector:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:5051"
     lido_validator_ejector_operator_id: "{{ lookup('env','VALIDATOR_EJECTOR_OPERATOR_ID') }}"
     lido_validator_ejector_staking_module_id: "{{ lookup('env','VALIDATOR_EJECTOR_STAKING_MODULE_ID') }}"
-    lido_validator_ejector_messages_password: "{{ lookup('env','VALIDATOR_EJECTOR__MESSAGES_PASSWORD') }}"
+    lido_validator_ejector_messages_password: "{{ lookup('env','VALIDATOR_EJECTOR_MESSAGES_PASSWORD') }}"
     lido_validator_ejector_locator_address: "{{ lookup('env','VALIDATOR_EJECTOR_LOCATOR_ADDRESS') }}"
     validator_ejector_oracle_addresses_allowlist:
       - "0xfdA7E01B2718C511bF016030010572e833C7aE6A"
