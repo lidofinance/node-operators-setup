@@ -29,6 +29,7 @@ Also, we recommend having a data of nodes and system on different volumes. In ot
      - ENVIRONMENT - Environment of setup (testnet or mainnet)
      - TELEGRAM_BOT_TOKEN - Token of your telegram bot
      - TELEGRAM_CHAT_ID - chat_id of your channel for alerts
+     - VALIDATOR_EJECTOR_MESSAGES_PASSWORD - your messages password
 
 3. Run installation
 
