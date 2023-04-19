@@ -21,7 +21,7 @@ validators_ejector:
   vars:
     # Node API Keys
     lido_keys_api_http_ext_port: 3000
-    lido_keys_api_image_tag: "@sha256:a7ce8097aa6dcd1658b42e88fb7aa55e014c24bdf60db2a7f6d98c4c20da9fad"
+    lido_keys_api_image_tag: "@sha256:fd264c3315197c5d70666ad98f182475d9b952342d09142b954f93e77ce3b71a"
     lido_keys_api_db_password: "{{ lookup('env','LIDO_KEYS_API_DB_PASSWORD') }}"
     lido_keys_api_el_rpc_url_list:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
@@ -30,7 +30,7 @@ validators_ejector:
     lido_keys_api_chain_id: 5 # Goerli
     # Validators Ejector
     lido_validator_ejector_prometheus_port: 8989
-    lido_validator_ejector_image_tag: "@sha256:e5768026ddec080faa6d0ff27d3b043bc874855fbbd38d4f9789bea14dcf8592"
+    lido_validator_ejector_image_tag: "@sha256:eb5ee7ccb34d2081f3ee222b2213d3b6722b3358810ee03bdc0835db32135d7d"
     lido_validator_ejector_execution_node:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
     lido_validator_ejector_consensus_node:
@@ -49,6 +49,8 @@ validators_ejector:
       - "0x81E411f1BFDa43493D7994F82fb61A415F6b8Fd4"
       - "0xb29dD2f6672C0DFF2d2f173087739A42877A5172"
       - "0x3799bDA7B884D33F79CEC926af21160dc47fbe05"
+      - "0x19b1BEbe4773fEC2496FEf8b81a9c175A823844B"
+      - "0x7eE534a6081d57AFB25b5Cff627d4D26217BB0E9"
 
 monitoring_server:
   hosts:
