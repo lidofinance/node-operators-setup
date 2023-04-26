@@ -2,31 +2,58 @@ groups:
   - name: Validators-Ejector
     rules:
       - alert: ValidatorsEjectorExitMessages
-        expr: validator_ejector_exit_messages > 1
+        expr: validator_ejector_exit_messages{valid="false"}  > 0
         labels:
           severity: warning
           service: validator_ejector
         annotations:
-          summary: Validators-Ejector exit messages amount too high.
-          description: "{{ $value }} exit messages in Validators-Ejector queue"
+          summary: Validator-Ejector loaded invalid exit messages.
+          description: "{{ $value }} invalid exit messages were loaded by Validator-Ejector. Please check app logs and messages format, signature and validator index."
           runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
-      - alert: ValidatorEjectorJobErrors
-        expr: validator_ejector_job_duration_seconds_bucket{le="+Inf",result="error"} > 1
+      - alert: ValidatorEjectorJobDurationSecondsCount
+        expr: increase(validator_ejector_job_duration_seconds_count{result="error"}[1h]) >= 3
         labels:
           severity: warning
           service: validator_ejector
         annotations:
-          summary: Validators-Ejector job errors
-          description: "{{ $value }} job errors in Validators-Ejector"
+          summary: Validator-Ejector jobs failed.
+          description: "{{ $value }} jobs failed in Validator-Ejector in the past hours. Please check app logs and EL + CL nodes status."
           runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
       - alert: ValidatorEjectorExitActionError
-        expr: validator_ejector_exit_actions{result="error"} > 1
+        expr: changes(validator_ejector_exit_actions{result="error"}[1h]) >= 9
         labels:
           severity: critical
           service: validator_ejector
         annotations:
-          summary: Validators-Ejector exit action error
-          description: "{{ $value }} exit action error in Validators-Ejector"
+          summary: Validator-Ejector is unable to perform validator exits.
+          description: "Validator exits were failed {{ $value }} times for the whole past hour by Validator-Ejector. Please check ETH network conditions."
           runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+      - alert: ValidatorEjectorExitMessagesLeftPercentWarn
+        expr: validator_ejector_exit_messages_left_percent < 30
+        labels:
+          severity: warning
+          service: validator_ejector
+        annotations:
+          summary: Validator-Ejector has less than 30% exit messages left.
+          description: "Low percentage of exit messages ({{ $value }}%) left detected in Validator-Ejector. Please add new pre-signed exit messages."
+
+      - alert: ValidatorEjectorExitMessagesLeftPercentCrit
+        expr: validator_ejector_exit_messages_left_percent < 15
+        labels:
+          severity: critical
+          service: validator_ejector
+        annotations:
+          summary: Validator-Ejector has less than 15% exit messages left.
+          description: "Low percentage of exit messages ({{ $value }}%) left detected in Validator-Ejector. Please add new pre-signed exit messages."
+
+      - alert: ValidatorEjectorEventSecurityVerification
+        expr: validator_ejector_event_security_verification{result="error"} > 0
+        labels:
+          severity: critical
+          service: validator_ejector
+        annotations:
+          summary: Validator-Ejector could not verify exit requests successfully.
+          description: "Exit events security verification failed in Validator-Ejector. Please check your Oracle allowlist is up to date."
