@@ -25,6 +25,7 @@ validators_ejector:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:5051"
     # Validators Ejector
     lido_validator_ejector_prometheus_port: 8989
+    lido_validator_ejector_image_tag: "@sha256:e3acb5eb1bab5a871bf70e9bb736e1a1016567e1846a9b96c27232c84643597a"
     lido_validator_ejector_execution_node:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
     lido_validator_ejector_consensus_node:
@@ -32,7 +33,7 @@ validators_ejector:
     lido_validator_ejector_operator_id: "{{ lookup('env','VALIDATOR_EJECTOR_OPERATOR_ID') }}"
     lido_validator_ejector_staking_module_id: "{{ lookup('env','VALIDATOR_EJECTOR_STAKING_MODULE_ID') }}"
     lido_validator_ejector_messages_password: "{{ lookup('env','VALIDATOR_EJECTOR_MESSAGES_PASSWORD') }}"
-    lido_validator_ejector_locator_address: "{{ lookup('env','VALIDATOR_EJECTOR_LOCATOR_ADDRESS') }}"
+    lido_validator_ejector_locator_address: "0xC1d0b3DE6792Bf6b4b37EccdcC24e45978Cfd2Eb"
     validator_ejector_oracle_addresses_allowlist:
       - "0xfdA7E01B2718C511bF016030010572e833C7aE6A"
       - "0xD3b1e36A372Ca250eefF61f90E833Ca070559970"
