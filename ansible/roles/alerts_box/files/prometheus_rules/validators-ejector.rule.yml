@@ -12,8 +12,7 @@ groups:
           runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
       - alert: ValidatorEjectorJobDurationSecondsCount
-        expr: validator_ejector_job_duration_seconds_count{result="error"} >= 3
-        for: 1h
+        expr: increase(validator_ejector_job_duration_seconds_count{result="error"}[1h]) >= 3
         labels:
           severity: warning
           service: validator_ejector

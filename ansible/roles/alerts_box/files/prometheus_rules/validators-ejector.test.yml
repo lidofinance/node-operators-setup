@@ -35,7 +35,7 @@ tests:
               result: error
             exp_annotations:
               summary: Validator-Ejector jobs failed.
-              description: "32 jobs failed in Validator-Ejector in the past hours. Please check app logs and EL + CL nodes status."
+              description: "12 jobs failed in Validator-Ejector in the past hours. Please check app logs and EL + CL nodes status."
               runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
   - interval: 5m
