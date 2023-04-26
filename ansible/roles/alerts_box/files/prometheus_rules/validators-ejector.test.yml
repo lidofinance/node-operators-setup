@@ -6,8 +6,8 @@ evaluation_interval: 1m
 tests:
   - interval: 1m
     input_series:
-      - series: validator_ejector_exit_messages{service="validator_ejector"}
-        values: 3
+      - series: validator_ejector_exit_messages{valid="false"}
+        values: 5
     alert_rule_test:
       - eval_time: 1m
         alertname: ValidatorsEjectorExitMessages
@@ -15,35 +15,35 @@ tests:
           - exp_labels:
               severity: warning
               service: validator_ejector
+              valid: false
             exp_annotations:
-              summary: Validators-Ejector exit messages amount too high.
-              description: "3 exit messages in Validators-Ejector queue"
+              summary: Validator-Ejector loaded invalid exit messages.
+              description: "5 invalid exit messages were loaded by Validator-Ejector. Please check app logs and messages format, signature and validator index."
               runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
-  - interval: 1m
+  - interval: 5m
     input_series:
-      - series: validator_ejector_job_duration_seconds_bucket{le="+Inf",result="error",service="validator_ejector"}
-        values: 4
+      - series: validator_ejector_job_duration_seconds_count{result="error"}
+        values: 20+1x30
     alert_rule_test:
-      - eval_time: 1m
-        alertname: ValidatorEjectorJobErrors
+      - eval_time: 1h
+        alertname: ValidatorEjectorJobDurationSecondsCount
         exp_alerts:
           - exp_labels:
               severity: warning
               service: validator_ejector
-              le: +Inf
               result: error
             exp_annotations:
-              summary: Validators-Ejector job errors
-              description: "4 job errors in Validators-Ejector"
+              summary: Validator-Ejector jobs failed.
+              description: "32 jobs failed in Validator-Ejector in the past hours. Please check app logs and EL + CL nodes status."
               runbook: "https://hackmd.io/@lido/Byue6SQxh"
 
-  - interval: 1m
+  - interval: 5m
     input_series:
-      - series: validator_ejector_exit_actions{result="error",service="validator_ejector"}
-        values: 5
+      - series: validator_ejector_exit_actions{result="error"}
+        values: 1+1x30
     alert_rule_test:
-      - eval_time: 1m
+      - eval_time: 1h
         alertname: ValidatorEjectorExitActionError
         exp_alerts:
           - exp_labels:
@@ -51,6 +51,52 @@ tests:
               service: validator_ejector
               result: error
             exp_annotations:
-              summary: Validators-Ejector exit action error
-              description: "5 exit action error in Validators-Ejector"
+              summary: Validator-Ejector is unable to perform validator exits.
+              description: "Validator exits were failed 12 times for the whole past hour by Validator-Ejector. Please check ETH network conditions."
               runbook: "https://hackmd.io/@lido/Byue6SQxh"
+
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_exit_messages_left_percent
+        values: 25
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorEjectorExitMessagesLeftPercentWarn
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              service: validator_ejector
+            exp_annotations:
+              summary: Validator-Ejector has less than 30% exit messages left.
+              description: "Low percentage of exit messages (25%) left detected in Validator-Ejector. Please add new pre-signed exit messages."
+
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_exit_messages_left_percent
+        values: 7
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorEjectorExitMessagesLeftPercentCrit
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              service: validator_ejector
+            exp_annotations:
+              summary: Validator-Ejector has less than 15% exit messages left.
+              description: "Low percentage of exit messages (7%) left detected in Validator-Ejector. Please add new pre-signed exit messages."
+
+  - interval: 1m
+    input_series:
+      - series: validator_ejector_event_security_verification{result="error"}
+        values: 3
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ValidatorEjectorEventSecurityVerification
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              service: validator_ejector
+              result: error
+            exp_annotations:
+              summary: Validator-Ejector could not verify exit requests successfully.
+              description: "Exit events security verification failed in Validator-Ejector. Please check your Oracle allowlist is up to date."
