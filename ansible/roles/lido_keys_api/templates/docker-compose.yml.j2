@@ -58,7 +58,6 @@ services:
       PROVIDERS_URLS: "{{ lido_keys_api_el_rpc_url_list | join(',') }}"
       GLOBAL_CACHE_TTL: "{{ lido_keys_api_global_cache_ttl }}"
       CHAIN_ID: "{{ lido_keys_api_chain_id }}"
-      JOB_INTERVAL_REGISTRY: "{{ lido_keys_api_job_interval_registry }}"
       DB_PORT: "{{ lido_keys_api_db_port }}"
       DB_HOST: lido-keys-api-db
       DB_NAME: "{{ lido_keys_api_db_username }}"
@@ -69,7 +68,6 @@ services:
       PROVIDER_CONCURRENT_REQUESTS: "{{ lido_keys_api_provider_concurrent_requests }}"
       PROVIDER_BATCH_AGGREGATION_WAIT_MS: "{{ lido_keys_api_provider_batch_aggregation_wait_ms }}"
       VALIDATOR_REGISTRY_ENABLE: "{{ lido_keys_api_validator_registry_enable }}"
-      FETCHING_UNUSED_KEYS_ENABLE: "{{ lido_keys_api_fetching_unused_keys_enable }}"
       CHAIN_ID: "{{ lido_keys_api_chain_id }}"
 {% if lido_keys_api_logging_driver|d('not-loki') == "loki" %}
     logging:
