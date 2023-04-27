@@ -21,6 +21,7 @@ validators_ejector:
   vars:
     # Node API Keys
     lido_keys_api_http_ext_port: 3000
+    lido_keys_api_chain_id: 5
     lido_keys_api_image_tag: "@sha256:fd264c3315197c5d70666ad98f182475d9b952342d09142b954f93e77ce3b71a"
     lido_keys_api_db_password: "{{ lookup('env','LIDO_KEYS_API_DB_PASSWORD') }}"
     lido_keys_api_el_rpc_url_list:
