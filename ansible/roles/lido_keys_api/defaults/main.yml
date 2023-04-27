@@ -17,12 +17,10 @@ lido_keys_api_log_level: info
 lido_keys_api_log_format: json # json | simple
 lido_keys_api_cors_whitelist_regexp: "^(.+)$$"
 lido_keys_api_global_cache_ttl: 1
-lido_keys_api_job_interval_registry: "*/5 * * * * *" # every 5 seconds
 lido_keys_api_provider_json_rpc_max_batch_size: 100
 lido_keys_api_provider_concurrent_requests: 5
 lido_keys_api_provider_batch_aggregation_wait_ms: 10
 lido_keys_api_validator_registry_enable: true
-lido_keys_api_fetching_unused_keys_enable: true
 lido_keys_api_chain_id: 1
 
 # sentry
