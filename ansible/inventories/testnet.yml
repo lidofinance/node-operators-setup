@@ -52,6 +52,7 @@ validators_ejector:
       - "0x3799bDA7B884D33F79CEC926af21160dc47fbe05"
       - "0x19b1BEbe4773fEC2496FEf8b81a9c175A823844B"
       - "0x7eE534a6081d57AFB25b5Cff627d4D26217BB0E9"
+      - "0xA8aF49FB44AAA8EECa9Ae918bb7c05e2E71c9DE9"
 
 monitoring_server:
   hosts:
