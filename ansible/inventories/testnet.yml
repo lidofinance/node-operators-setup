@@ -22,7 +22,7 @@ validators_ejector:
     # Node API Keys
     lido_keys_api_http_ext_port: 3000
     lido_keys_api_chain_id: 5
-    lido_keys_api_image_tag: "@sha256:d05885c2ef715fd45cc677f7a3ef7042ba7c7ac70a49f6dae5e22cc2bfdbacf2"
+    lido_keys_api_image_tag: "@sha256:db99dd3494301abd586a77692154a6eef62b6e07ef3e60e49a0e6f0f5495865a"
     lido_keys_api_db_password: "{{ lookup('env','LIDO_KEYS_API_DB_PASSWORD') }}"
     lido_keys_api_el_rpc_url_list:
       - "http://{{ (hostvars[groups.ethereum_nodes[0]]).wireguard_address.split('/')[0] }}:8545"
